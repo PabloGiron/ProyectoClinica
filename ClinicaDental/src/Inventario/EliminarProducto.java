@@ -3,17 +3,17 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ModuloInventario;
+package Inventario;
 
 /**
  *
  * @author oem
  */
-public class AgregarProducto implements ModificarBD {
+public class EliminarProducto implements ModificarBD {
 
     @Override
     public void operar() {
-        System.out.println("Agregando producto...");
+        System.out.println("Eliminando producto...");
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
