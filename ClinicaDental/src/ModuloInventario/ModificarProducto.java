@@ -13,7 +13,7 @@ public class ModificarProducto implements ModificarBD{
 
     @Override
     public void operar() {
-        System.out.println("Modificando inventario...");
+        System.out.println("Modificando inventario....");
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
