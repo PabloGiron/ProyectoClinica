@@ -16,7 +16,7 @@ public class Inventario {
     ModificarBD tipoOperacion = new ModificarBD() {
         @Override
         public void operar() {
-            throw new UnsupportedOperationException("Not sukhepported yet."); //To change body of generated methods, choose Tools | Templates.
+            throw new UnsupportedOperationException("Not sukhenadapported yet."); //To change body of generated methods, choose Tools | Templates.
         }
     };
 
