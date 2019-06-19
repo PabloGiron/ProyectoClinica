@@ -3,12 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Inventario;
+package ModuloInventario;
 
 /**
  *
  * @author oem
  */
-public interface ModificarBD {
-    public void operar();
+public class ModificarProducto extends Inventario{
+    public void modificarProducto(){
+        
+    }
 }
