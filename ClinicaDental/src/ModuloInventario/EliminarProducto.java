@@ -9,8 +9,11 @@ package ModuloInventario;
  *
  * @author oem
  */
-public class EliminarProducto extends Inventario {
-    public void eliminarProducto(){
-        
+public class EliminarProducto implements ModificarBD {
+
+    @Override
+    public void operar() {
+        System.out.println("Eliminando producto...");
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

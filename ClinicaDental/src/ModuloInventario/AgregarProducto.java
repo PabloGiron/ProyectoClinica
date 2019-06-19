@@ -9,10 +9,11 @@ package ModuloInventario;
  *
  * @author oem
  */
-public class AgregarProducto extends Inventario {
-    private Inventario inventario = new Inventario();
-    public void agregarProducto(){
-        
-        System.out.println(inventario.getPrecio());
+public class AgregarProducto implements ModificarBD {
+
+    @Override
+    public void operar() {
+        System.out.println("Agregando producto...");
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
