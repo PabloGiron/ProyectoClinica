@@ -13,6 +13,12 @@ public class Inventario {
     private float precio;
     private String nombreProducto;
     private int cantidad;
+    ModificarBD tipoOperacion = new ModificarBD() {
+        @Override
+        public void operar() {
+            throw new UnsupportedOperationException("Not sukhenadapported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+    };
 
     public float getPrecio() {
         return precio;
