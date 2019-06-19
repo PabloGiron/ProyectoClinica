@@ -5,14 +5,17 @@
  */
 package ModuloInventario;
 
+import Inventario.IModificarBD;
+
 /**
  *
  * @author oem
  */
-public class AgregarProducto extends Inventario {
-    private Inventario inventario = new Inventario();
-    public void agregarProducto(){
-        
-        System.out.println(inventario.getPrecio());
+public class AgregarProducto implements IModificarBD {
+
+    @Override
+    public void operar() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+    
 }
