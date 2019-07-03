@@ -3,19 +3,22 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ModuloInventario;
+package Cita;
 
-import Inventario.IModificarBD;
+import ModuloPaciente.Paciente;
 
 /**
  *
- * @author oem
+ * @author nasc_
  */
-public class AgregarProducto implements IModificarBD {
+public class CitaNormal implements ICita{
+
+    public CitaNormal() {
+        
+    }
 
     @Override
-    public void operar() {
+    public void crearPaciente(Paciente paciente) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
 }

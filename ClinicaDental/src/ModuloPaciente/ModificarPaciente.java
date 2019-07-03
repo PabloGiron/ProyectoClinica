@@ -3,18 +3,16 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ModuloInventario;
-
-import Inventario.IModificarBD;
+package ModuloPaciente;
 
 /**
  *
- * @author oem
+ * @author nasc_
  */
-public class AgregarProducto implements IModificarBD {
+public class ModificarPaciente implements IModificarPaciente{
 
     @Override
-    public void operar() {
+    public void modificar() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     

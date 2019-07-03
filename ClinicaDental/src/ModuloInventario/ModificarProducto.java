@@ -5,12 +5,16 @@
  */
 package ModuloInventario;
 
+import Inventario.IModificarBD;
+
 /**
  *
  * @author oem
  */
-public class ModificarProducto extends Inventario{
-    public void modificarProducto(){
-        
+public class ModificarProducto implements IModificarBD{
+
+    @Override
+    public void operar() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
