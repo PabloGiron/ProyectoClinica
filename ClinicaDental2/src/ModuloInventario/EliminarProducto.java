@@ -34,36 +34,18 @@ public class EliminarProducto implements IModificarBD {
     }
 
 
-    public void eliminar(Integer id) throws NonexistentEntityException {
-        EntityManager em = null;
-        try {
-            em = getEntityManager();
-            em.getTransaction().begin();
-            Producto producto;
-            try {
-                producto = em.getReference(Producto.class, id);
-                producto.getId();
-            } catch (EntityNotFoundException enfe) {
-                throw new NonexistentEntityException("The producto with id " + id + " no longer exists.", enfe);
-            }
-            em.remove(producto);
-            em.getTransaction().commit();
-        } finally {
-            if (em != null) {
-                em.close();
-            }
-        }
-    }
 
-    public void Operar(Integer id)  {
+    @Override
+    public void Operar(Producto producto) {
         EntityManager em = null;
+        int id = producto.getId();
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            Producto producto = null;
+            Producto producto2 = null;
             try {
-                producto = em.getReference(Producto.class, id);
-                producto.getId();
+                producto2 = em.getReference(Producto.class, id);
+                producto2.getId();
             } catch (EntityNotFoundException enfe) {
                 try {
                     throw new NonexistentEntityException("The producto with id " + id + " no longer exists.", enfe);
@@ -71,18 +53,13 @@ public class EliminarProducto implements IModificarBD {
                     Logger.getLogger(EliminarProducto.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
-            em.remove(producto);
+            em.remove(producto2);
             em.getTransaction().commit();
         } finally {
             if (em != null) {
                 em.close();
             }
         }
-    }
-
-    @Override
-    public void Operar(Producto producto) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     

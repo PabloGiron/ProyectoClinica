@@ -31,20 +31,6 @@ public class AgregarProducto implements IModificarBD {
         return emf.createEntityManager();
     }
 
-    public void create(Producto producto) {
-        EntityManager em = null;
-        try {
-            em = getEntityManager();
-            em.getTransaction().begin();
-            em.persist(producto);
-            em.getTransaction().commit();
-        } finally {
-            if (em != null) {
-                em.close();
-            }
-        }
-    }
-
 
     @Override
     public void Operar(Producto producto) {

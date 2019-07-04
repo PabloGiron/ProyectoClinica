@@ -22,7 +22,7 @@ import javax.persistence.criteria.Root;
  */
 public class ProductoJpaController implements Serializable {
 
-    public ProductoJpaController() {
+    public ProductoJpaController( ) {
         this.emf = Persistence.createEntityManagerFactory("ClinicaDental2PU");
     }
     private EntityManagerFactory emf = null;
