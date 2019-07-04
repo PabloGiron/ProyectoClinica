@@ -30,7 +30,7 @@ public class AgregarProducto implements IModificarBD {
     public EntityManager getEntityManager() {
         return emf.createEntityManager();
     }
-
+// Linea que agregue solo para estar seguro de que subi lo que hice a git xD 
 
     @Override
     public void Operar(Producto producto) {
