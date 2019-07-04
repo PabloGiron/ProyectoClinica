@@ -5,7 +5,10 @@
  */
 package ModuloInventario;
 
+import ModuloInventario.exceptions.NonexistentEntityException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -25,6 +28,8 @@ public class ClienteInventario2 extends javax.swing.JFrame {
     }
     ProductoJpaController controladorInventario = new ProductoJpaController(); 
     DefaultTableModel rellenarTabla;
+    Producto productoEditar;
+    
     private void llenarTabla() {
         try {
             rellenarTabla = (new DefaultTableModel(
@@ -69,7 +74,7 @@ public class ClienteInventario2 extends javax.swing.JFrame {
                 rellenarTabla.setValueAt(listaPedido.get(i).getNombre(), i, 1);
                 rellenarTabla.setValueAt(listaPedido.get(i).getCantidad(), i, 2);
                 rellenarTabla.setValueAt(listaPedido.get(i).getPrecio(), i, 3);
-                if (listaPedido.get(i).getTipo1().equals("1")){
+                /*if (listaPedido.get(i).getTipo1().equals("1")){
                     rellenarTabla.setValueAt("Equipo", i, 4);
                 }else if (listaPedido.get(i).getTipo1().equals("2")){
                     rellenarTabla.setValueAt("Instrumental operatorio", i, 4);
@@ -77,19 +82,19 @@ public class ClienteInventario2 extends javax.swing.JFrame {
                     rellenarTabla.setValueAt("Material", i, 4);
                 } else {rellenarTabla.setValueAt("Error", i, 4);}
                 // Condicion para ver a que tipo_2 pertenece el objeto
-                /*if (rs.getString("Tipo_2").equals("1")){
-                    fila [4] = "Instrumental básico";
-                }else if (rs.getString("Tipo_2").equals("2")){
-                    fila [4] = "Exodoncia";
-                }else if (rs.getString("Tipo_2").equals("3")){
-                    fila [4] = "Operatoria";
-                }else if (rs.getString("Tipo_2").equals("4")){
-                    fila [4] = "Periodoncia";
-                }else if (rs.getString("Tipo_2").equals("5")){
-                    fila [4] = "Prótesis fija";
-                }else if (rs.getString("Tipo_2").equals("6")){
-                    fila [4] = "Prótesis removibles parcial";
-                }else {fila [4] = "---";}*/
+                if (listaPedido.get(i).getTipo2().equals("1")){
+                    rellenarTabla.setValueAt("Instrumental básico", i, 5);
+                }else if (listaPedido.get(i).getTipo2().equals("2")){
+                    rellenarTabla.setValueAt("Exodoncia", i, 5);
+                }else if (listaPedido.get(i).getTipo2().equals("3")){
+                    rellenarTabla.setValueAt("Operatoria", i, 5);
+                }else if (listaPedido.get(i).getTipo2().equals("4")){
+                    rellenarTabla.setValueAt("Periodoncia", i, 5);
+                }else if (listaPedido.get(i).getTipo2().equals("5")){
+                    rellenarTabla.setValueAt("Prótesis fija", i, 5);
+                }else if (listaPedido.get(i).getTipo2().equals("6")){
+                    rellenarTabla.setValueAt("Prótesis removibles parcial", i, 5);
+                }else {rellenarTabla.setValueAt("---------", i, 5);}*/
                 rellenarTabla.setValueAt(listaPedido.get(i).getTipo1(), i, 4);
                 rellenarTabla.setValueAt(listaPedido.get(i).getTipo2(), i, 5);
             }
@@ -120,6 +125,8 @@ public class ClienteInventario2 extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         tablaInventario = new javax.swing.JTable();
         btnAgregar = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
+        btnModificar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -238,6 +245,20 @@ public class ClienteInventario2 extends javax.swing.JFrame {
             }
         });
 
+        jButton1.setText("Eliminar");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
+        btnModificar.setText("Modificar");
+        btnModificar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnModificarActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -248,8 +269,12 @@ public class ClienteInventario2 extends javax.swing.JFrame {
                         .addGap(20, 20, 20)
                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(255, 255, 255)
-                        .addComponent(btnAgregar, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(178, 178, 178)
+                        .addComponent(btnAgregar, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnModificar, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addComponent(jScrollPane1)
@@ -261,10 +286,13 @@ public class ClienteInventario2 extends javax.swing.JFrame {
                 .addGap(20, 20, 20)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnAgregar, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButton1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 42, Short.MAX_VALUE)
+                    .addComponent(btnAgregar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnModificar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 215, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         pack();
@@ -305,27 +333,49 @@ public class ClienteInventario2 extends javax.swing.JFrame {
     }//GEN-LAST:event_tablaInventarioMouseClicked
 
     private void tablaInventarioMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaInventarioMousePressed
+                if(evt.getClickCount() > 1){
+            int fila = tablaInventario.getSelectedRow();
+            if(fila >= 0){
+                try {
+                    productoEditar = (Producto) tablaInventario.getValueAt(fila, 0);
+                    txtNombre.setText(tablaInventario.getValueAt(fila, 1).toString());
+                    txtCantidad.setText(tablaInventario.getValueAt(fila, 2).toString());
+                    txtPrecio.setText(tablaInventario.getValueAt(fila, 3).toString());
+                    //cmbTipo.setSelectedItem(Integer.parseInt(tablaInventario.getValueAt(fila, 4).toString())+1);
+                    //cmbTipo2.setSelectedIndex(Integer.parseInt(tablaInventario.getValueAt(fila, 5).toString())+1);
 
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(null, e.getMessage());
+                }
+            }else{
+                JOptionPane.showMessageDialog(null,"No ha seleccionado ninguna fila.");
+            }
+        }
     }//GEN-LAST:event_tablaInventarioMousePressed
 
     private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
         // TODO add your handling code here:
-        //StartTransaction();
-
+        //
+        
         // ------ En caso de que falle
         if(txtNombre.getText().equals("") || txtPrecio.getText().equals("") || txtCantidad.getText().equals("") ){
             JOptionPane.showMessageDialog(null,"Error: Uno de los campos se encuentran vacíos.");
         }else{
+            try{
+                Inventario contexto = new Inventario(new AgregarProducto());
+                Producto producto = new Producto ();
+                producto.setNombre(txtNombre.getText());
+                producto.setCantidad(Integer.parseInt(txtCantidad.getText()));
+                producto.setPrecio(Float.parseFloat(txtCantidad.getText()));
+                producto.setTipo1(Integer.toString(cmbTipo.getSelectedIndex() + 1));
+                producto.setTipo2(Integer.toString(cmbTipo2.getSelectedIndex() + 1));
+                //controladorInventario.create(producto);
+                contexto.procesar(producto);
+                cargarDatos();
+                JOptionPane.showMessageDialog(null,"Se ha creado un nuevo registro.");
+            }catch(Exception e){ JOptionPane.showMessageDialog(null, e.getMessage());}
+            //-------------------------
 
-            //--------- Sino, se compremete ----------------
-            int num = 1;
-            String Nombre = txtNombre.getText();
-            String Cantidad = txtCantidad.getText();
-            String Precio = txtPrecio.getText();
-            int num2 = cmbTipo.getSelectedIndex() + 1;
-            int num3 = cmbTipo2.getSelectedIndex() + 1;
-
-            JOptionPane.showMessageDialog(null,"Se ha creado un nuevo registro.");
             this.txtPrecio.setText("");
             this.txtNombre.setText("");
             this.txtCantidad.setText("");
@@ -333,6 +383,38 @@ public class ClienteInventario2 extends javax.swing.JFrame {
         }
 
     }//GEN-LAST:event_btnAgregarActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+ 
+        try {
+            //Producto producto = (Producto) tablaInventario.getValueAt(tablaInventario.getSelectedRow(), 0);
+            Inventario contexto = new Inventario (new EliminarProducto());
+            controladorInventario.destroy((int) tablaInventario.getValueAt(tablaInventario.getSelectedRow(), 0));
+           // contexto.procesar((int) tablaInventario.getValueAt(tablaInventario.getSelectedRow(), 0));
+            cargarDatos();
+            JOptionPane.showMessageDialog(null, "Registro eliminado correctamente.");
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e.getMessage());
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
+        // TODO add your handling code here:
+        try {
+            Inventario contexto = new Inventario(new ModificarProducto());
+            productoEditar.setNombre(txtNombre.getText());
+            productoEditar.setCantidad(Integer.parseInt(txtCantidad.getText()));
+            productoEditar.setPrecio(Float.parseFloat(txtCantidad.getText()));
+            productoEditar.setTipo1(Integer.toString(cmbTipo.getSelectedIndex() + 1));
+            productoEditar.setTipo2(Integer.toString(cmbTipo2.getSelectedIndex() + 1));
+            contexto.procesar(productoEditar);
+       //    controladorInventario.edit(productoEditar);
+        JOptionPane.showMessageDialog(null, "El registro se ha modificado.");
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e.getMessage());
+        }
+
+    }//GEN-LAST:event_btnModificarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -372,8 +454,10 @@ public class ClienteInventario2 extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAgregar;
+    private javax.swing.JButton btnModificar;
     private javax.swing.JComboBox<String> cmbTipo;
     private javax.swing.JComboBox<String> cmbTipo2;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
