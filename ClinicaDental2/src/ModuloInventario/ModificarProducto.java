@@ -33,7 +33,7 @@ public class ModificarProducto implements IModificarBD {
         return emf.createEntityManager();
     }
 
-    public Producto findProducto(Integer id) {
+    public Producto encontrarProducto(Integer id) {
         EntityManager em = getEntityManager();
         try {
             return em.find(Producto.class, id);
@@ -54,7 +54,7 @@ public class ModificarProducto implements IModificarBD {
             String msg = ex.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
                 Integer id = producto.getId();
-                if (findProducto(id) == null) {
+                if (encontrarProducto(id) == null) {
                     try {
                         throw new NonexistentEntityException("The producto with id " + id + " no longer exists.");
                     } catch (NonexistentEntityException ex1) {

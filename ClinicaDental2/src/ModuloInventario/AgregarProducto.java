@@ -30,21 +30,7 @@ public class AgregarProducto implements IModificarBD {
     public EntityManager getEntityManager() {
         return emf.createEntityManager();
     }
-
-    public void create(Producto producto) {
-        EntityManager em = null;
-        try {
-            em = getEntityManager();
-            em.getTransaction().begin();
-            em.persist(producto);
-            em.getTransaction().commit();
-        } finally {
-            if (em != null) {
-                em.close();
-            }
-        }
-    }
-
+// Linea que agregue solo para estar seguro de que subi lo que hice a git xD 
 
     @Override
     public void Operar(Producto producto) {

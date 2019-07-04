@@ -337,7 +337,7 @@ public class ClienteInventario2 extends javax.swing.JFrame {
             int fila = tablaInventario.getSelectedRow();
             if(fila >= 0){
                 try {
-                    productoEditar = (Producto) tablaInventario.getValueAt(fila, 0);
+                    productoEditar = new Producto(Integer.parseInt(tablaInventario.getValueAt(fila, 0).toString()));
                     txtNombre.setText(tablaInventario.getValueAt(fila, 1).toString());
                     txtCantidad.setText(tablaInventario.getValueAt(fila, 2).toString());
                     txtPrecio.setText(tablaInventario.getValueAt(fila, 3).toString());
@@ -389,8 +389,8 @@ public class ClienteInventario2 extends javax.swing.JFrame {
         try {
             //Producto producto = (Producto) tablaInventario.getValueAt(tablaInventario.getSelectedRow(), 0);
             Inventario contexto = new Inventario (new EliminarProducto());
-            controladorInventario.destroy((int) tablaInventario.getValueAt(tablaInventario.getSelectedRow(), 0));
-           // contexto.procesar((int) tablaInventario.getValueAt(tablaInventario.getSelectedRow(), 0));
+            //controladorInventario.destroy((int) tablaInventario.getValueAt(tablaInventario.getSelectedRow(), 0));
+            contexto.procesar(productoEditar);
             cargarDatos();
             JOptionPane.showMessageDialog(null, "Registro eliminado correctamente.");
         } catch (Exception e) {
@@ -408,6 +408,7 @@ public class ClienteInventario2 extends javax.swing.JFrame {
             productoEditar.setTipo1(Integer.toString(cmbTipo.getSelectedIndex() + 1));
             productoEditar.setTipo2(Integer.toString(cmbTipo2.getSelectedIndex() + 1));
             contexto.procesar(productoEditar);
+            cargarDatos();
        //    controladorInventario.edit(productoEditar);
         JOptionPane.showMessageDialog(null, "El registro se ha modificado.");
         } catch (Exception e) {
