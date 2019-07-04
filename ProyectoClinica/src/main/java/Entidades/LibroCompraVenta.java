@@ -35,7 +35,8 @@ import javax.persistence.TemporalType;
     @NamedQuery(name = "LibroCompraVenta.findByComprastotal", query = "SELECT l FROM LibroCompraVenta l WHERE l.comprastotal = :comprastotal"),
     @NamedQuery(name = "LibroCompraVenta.findByTotal", query = "SELECT l FROM LibroCompraVenta l WHERE l.total = :total"),
     @NamedQuery(name = "LibroCompraVenta.findByPerdidaGanancia", query = "SELECT l FROM LibroCompraVenta l WHERE l.perdidaGanancia = :perdidaGanancia"),
-    @NamedQuery(name = "LibroCompraVenta.findByFecha", query = "SELECT l FROM LibroCompraVenta l WHERE l.fecha = :fecha")})
+    @NamedQuery(name = "LibroCompraVenta.findByFecha", query = "SELECT l FROM LibroCompraVenta l WHERE l.fecha = :fecha"),
+    @NamedQuery(name = "LibroCompraVenta.idMax", query = "SELECT MAX(l.id) FROM LibroCompraVenta l")})
 public class LibroCompraVenta implements Serializable {
 
     private static final long serialVersionUID = 1L;
