@@ -6,7 +6,9 @@
 package Entidades;
 
 import java.io.Serializable;
+import java.util.List;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -14,11 +16,12 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
  *
- * @author oem
+ * @author nasc_
  */
 @Entity
 @Table(name = "producto")
@@ -49,6 +52,8 @@ public class Producto implements Serializable {
     private Boolean tipo1;
     @Column(name = "Tipo_2")
     private Boolean tipo2;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "productoid")
+    private List<Detallecompra> detallecompraList;
 
     public Producto() {
     }
@@ -103,6 +108,14 @@ public class Producto implements Serializable {
 
     public void setTipo2(Boolean tipo2) {
         this.tipo2 = tipo2;
+    }
+
+    public List<Detallecompra> getDetallecompraList() {
+        return detallecompraList;
+    }
+
+    public void setDetallecompraList(List<Detallecompra> detallecompraList) {
+        this.detallecompraList = detallecompraList;
     }
 
     @Override
