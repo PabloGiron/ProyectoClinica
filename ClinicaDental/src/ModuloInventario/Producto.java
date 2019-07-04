@@ -15,6 +15,7 @@ import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
@@ -22,6 +23,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "producto")
+@XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Producto.findAll", query = "SELECT p FROM Producto p"),
     @NamedQuery(name = "Producto.findById", query = "SELECT p FROM Producto p WHERE p.id = :id"),
@@ -31,7 +33,6 @@ import javax.persistence.Table;
     @NamedQuery(name = "Producto.findByTipo1", query = "SELECT p FROM Producto p WHERE p.tipo1 = :tipo1"),
     @NamedQuery(name = "Producto.findByTipo2", query = "SELECT p FROM Producto p WHERE p.tipo2 = :tipo2")})
 public class Producto implements Serializable {
-
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
