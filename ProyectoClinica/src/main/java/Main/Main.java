@@ -6,19 +6,19 @@
 package Main;
 
 import java.util.List;
-import Entidades.Servicio;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.TypedQuery;
+import Entidades.Servicio;
 
 /**
  *
  * @author oem
  */
 public class Main {
-        public static void main(String[] args) {
-            EntityManagerFactory emf = Persistence.createEntityManagerFactory("Clinica");
+    public static void main(String[] args) {
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("Clinica");
         EntityManager em = emf.createEntityManager();
         TypedQuery<Servicio> query = em.createNamedQuery("Servicio.findByNombre", Servicio.class);
         query.setParameter("nombre", "Extracción");
