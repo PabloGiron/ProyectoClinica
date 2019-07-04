@@ -5,7 +5,6 @@
  */
 package ModuloInventario;
 
-import Inventario.IModificarBD;
 
 /**
  *
