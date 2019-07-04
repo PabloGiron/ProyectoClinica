@@ -6,18 +6,20 @@
     <class>Entidades.Telefonos</class>
     <class>Entidades.Detalleventa</class>
     <class>Entidades.Compra</class>
-    <class>Entidades.Producto</class>
     <class>Entidades.Historial</class>
     <class>Entidades.LibroCompraVenta</class>
     <class>Entidades.Ventas</class>
     <class>Entidades.Detallecompra</class>
     <class>Entidades.Servicio</class>
     <class>Entidades.Saldoextra</class>
+    <class>Entidades.Producto_1</class>
+    <class>Entidades.Producto_</class>
+    <class>Entidades.Producto</class>
     <properties>
-      <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/bd_clinica?zeroDateTimeBehavior=convertToNull"/>
+      <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/bd_clinica"/>
       <property name="javax.persistence.jdbc.user" value="root"/>
       <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>
-      <property name="javax.persistence.jdbc.password" value="4321"/>
+      <property name="javax.persistence.jdbc.password" value="123"/>
     </properties>
   </persistence-unit>
 </persistence>
