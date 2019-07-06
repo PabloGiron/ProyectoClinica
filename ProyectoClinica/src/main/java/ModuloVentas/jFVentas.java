@@ -365,6 +365,7 @@ public class jFVentas extends javax.swing.JFrame {
         queryDetalle.setParameter("cantidad", Integer.parseInt(jTFCantidad.getText()));
         queryDetalle.setParameter("servid", idServicio);
         queryDetalle.setParameter("vid", idVenta);
+        queryDetalle.executeUpdate();
         
         emDetalle.close();
         emServicio.close();
@@ -390,6 +391,8 @@ public class jFVentas extends javax.swing.JFrame {
         
         
     }
+    
+    //Métodos/Acciones de botones
     private void AgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AgregarActionPerformed
         
         
@@ -467,7 +470,7 @@ public class jFVentas extends javax.swing.JFrame {
                     }catch (SQLException ex) {
                         Logger.getLogger(Compra.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                    Cantidad.setText("");
+        } Cantidad.setText("");
                     habilitar();
                 }
                 else
