@@ -4,8 +4,8 @@
     <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
     <class>ModuloInventario.Producto</class>
     <properties>
-      <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/bd_clinica?zeroDateTimeBehavior=convertToNull"/>
-      <property name="javax.persistence.jdbc.password" value="123"/>
+      <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/bd_clinica"/>
+      <property name="javax.persistence.jdbc.password" value="4321"/>
       <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>
       <property name="javax.persistence.jdbc.user" value="root"/>
     </properties>
