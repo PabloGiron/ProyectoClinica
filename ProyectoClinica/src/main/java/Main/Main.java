@@ -22,7 +22,7 @@ public class Main {
         query.setParameter("nombre", "Extracción");
         List<Servicio> listaDatos = query.getResultList();
         for(Servicio s : listaDatos){
-            System.out.println(s.getPrecio());
+            //System.out.println(s.getPrecio());
         }
         
         Query queryVentas = emVentas.createNamedQuery("Ventas.idMax", Ventas.class);

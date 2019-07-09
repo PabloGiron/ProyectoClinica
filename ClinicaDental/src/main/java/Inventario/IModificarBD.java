@@ -3,11 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ModuloInventario;
+package Inventario;
 
 /**
  *
- * @author oem
+ * @author nasc_
  */
 public interface IModificarBD {
     public void operar();

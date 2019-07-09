@@ -5,12 +5,13 @@
  */
 package ModuloInventario;
 
+import Inventario.IModificarBD;
 
 /**
  *
  * @author oem
  */
-public class AgregarProducto implements IModificarBD {
+public class EliminarProducto implements IModificarBD {
 
     @Override
     public void operar() {

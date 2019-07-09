@@ -46,9 +46,9 @@ public class Producto implements Serializable {
     @Column(name = "Precio")
     private Float precio;
     @Column(name = "Tipo_1")
-    private String tipo1;
+    private Boolean tipo1;
     @Column(name = "Tipo_2")
-    private String tipo2;
+    private Boolean tipo2;
 
     public Producto() {
     }
@@ -89,19 +89,19 @@ public class Producto implements Serializable {
         this.precio = precio;
     }
 
-    public String getTipo1() {
+    public Boolean getTipo1() {
         return tipo1;
     }
 
-    public void setTipo1(String tipo1) {
+    public void setTipo1(Boolean tipo1) {
         this.tipo1 = tipo1;
     }
 
-    public String getTipo2() {
+    public Boolean getTipo2() {
         return tipo2;
     }
 
-    public void setTipo2(String tipo2) {
+    public void setTipo2(Boolean tipo2) {
         this.tipo2 = tipo2;
     }
 
