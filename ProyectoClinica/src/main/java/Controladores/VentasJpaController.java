@@ -223,5 +223,21 @@ public class VentasJpaController implements Serializable {
             em.close();
         }
     }
+    public void updateTotal(Ventas ventas){
+        EntityManager em = null;
+        try{
+            em = getEntityManager();
+            em.getTransaction().begin();
+            Query updateVentas = em.createNativeQuery("UPDATE Ventas SET Ventas.Total = ? WHERE Ventas.id = ?");
+            updateVentas.setParameter(1, ventas.getTotal());
+            updateVentas.setParameter(2, ventas.getId());
+            updateVentas.executeUpdate();
+            em.getTransaction().commit();
+        }finally {
+            if (em != null) {
+                em.close();
+            }
+        }
+    }
     
 }
