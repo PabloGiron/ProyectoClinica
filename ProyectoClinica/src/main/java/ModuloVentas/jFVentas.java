@@ -1,16 +1,14 @@
 package ModuloVentas;
 
+import Controladores.DetalleventaJpaController;
+import Controladores.VentasJpaController;
 import Entidades.*;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import Singleton.EntityM;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -23,6 +21,7 @@ import javax.swing.table.DefaultTableModel;
 public class jFVentas extends javax.swing.JFrame {
 
     DefaultTableModel modeloTabla;
+    private EntityManager em = EntityM.getEm();
     
     public jFVentas() {
         initComponents();
@@ -264,8 +263,6 @@ public class jFVentas extends javax.swing.JFrame {
     
     //Método que se utilizará para llenar el ComboBox con todos los servicios
     private void llenarCombo(){
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("Clinica");
-        EntityManager em = emf.createEntityManager();
         TypedQuery<Servicio> query = em.createNamedQuery("Servicio.findAll", Servicio.class);
         List<Servicio> listaDatos = query.getResultList();
         for(Servicio s : listaDatos){
@@ -315,8 +312,6 @@ public class jFVentas extends javax.swing.JFrame {
     private void cargarVentas(){
         Object o[] = null;
         int posicion = 0;
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("Clinica");
-        EntityManager em = emf.createEntityManager();
         TypedQuery<Ventas> query = em.createNamedQuery("Ventas.findAll", Ventas.class);
         List<Ventas> listaDatos = query.getResultList();
         DateTimeFormatter f = DateTimeFormatter.ofPattern( "E MMM dd HH:mm:ss z uuuu" ).withLocale( Locale.US );
@@ -338,50 +333,44 @@ public class jFVentas extends javax.swing.JFrame {
     
     //Método para crear DetalleVenta
     private void crearDetalle(){
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("Clinica");
-        EntityManager emDetalle = emf.createEntityManager();
-        EntityManager emServicio = emf.createEntityManager();
-        EntityManager emVentas = emf.createEntityManager();
-        
         //Obtención de Querys necesarias 
-        Query queryDetalle = emDetalle.createNativeQuery("INSERT INTO Detalleventa (Subtotal, Cantidad, Servicio_id, Ventas_id) VALUES (:subtotal, :cantidad, :servid, :vid)");
+        Detalleventa detalle = new Detalleventa();
+        DetalleventaJpaController cDetalle = new DetalleventaJpaController(EntityM.getEmf());
+        Query queryDetalle = em.createNativeQuery("INSERT INTO Detalleventa (Subtotal, Cantidad, Servicio_id, Ventas_id) VALUES (:subtotal, :cantidad, :servid, :vid)");
         
-        TypedQuery<Servicio> queryServicio = emServicio.createNamedQuery("Servicio.findByNombre", Servicio.class);
+        TypedQuery<Servicio> queryServicio = em.createNamedQuery("Servicio.findByNombre", Servicio.class);
         queryServicio.setParameter("nombre", jCBServicios.getSelectedItem());
-        List<Servicio> listaServicio = queryServicio.getResultList();
         
-        Query queryVentas = emVentas.createNamedQuery("Ventas.idMax", Ventas.class);
+        Query queryVentasId = em.createNamedQuery("Ventas.idMax", Ventas.class);
         // Declaración de variables extra
         float subTotal = 0, precio = 0;
-        int idServicio = 0, idVenta = 0;
+        int idVenta = 0;
         
-        for(Servicio s : listaServicio){
-            subTotal = s.getPrecio();
-            idServicio = s.getId();
+        idVenta = (Integer)queryVentasId.getSingleResult();
+        TypedQuery<Ventas> queryVentas = em.createNamedQuery("Ventas.findById", Ventas.class);
+        queryServicio.setParameter("id", idVenta);
+        Ventas v = queryVentas.getSingleResult();
+        Servicio s = queryServicio.getSingleResult();
+        try{
+            detalle.setSubtotal(precio*Integer.parseInt(jTFCantidad.getText()));
+            detalle.setCantidad(Integer.parseInt(jTFCantidad.getText()));
+            detalle.setServicioid(s);
+            detalle.setVentasid(v);
+            cDetalle.create(detalle);
+            JOptionPane.showMessageDialog(null, "¡Detalle cargado correctamente!");
+        }catch (Exception e){
+            JOptionPane.showMessageDialog(null, e.getMessage());
         }
-        
-        idVenta = (Integer)queryVentas.getSingleResult();
-        queryDetalle.setParameter("subtotal", precio*Integer.parseInt(jTFCantidad.getText()));
-        queryDetalle.setParameter("cantidad", Integer.parseInt(jTFCantidad.getText()));
-        queryDetalle.setParameter("servid", idServicio);
-        queryDetalle.setParameter("vid", idVenta);
-        
-        emDetalle.close();
-        emServicio.close();
-        emVentas.close();
-        emf.close();
+        em.close();
     }
     
     //Método para crear Factura
     private void crearFactura(){
-        //Creación de EntityManager de las clases
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("Clinica");
-        EntityManager emVenta = emf.createEntityManager();
-        EntityManager emLibro = emf.createEntityManager();
-        
         //Creación de Querys
-        Query queryLibro = emLibro.createQuery("LibroCompraVenta.idMax", LibroCompraVenta.class);
-        Query queryVenta = emVenta.createNativeQuery("INSERT INTO Ventas (Total, Fecha, Numero, Libro_compra_venta_id) VALUES (:total, :fecha, :numero, :idLibro)");
+        Ventas venta = new Ventas();
+        VentasJpaController cVentas = new VentasJpaController(EntityM.getEmf());
+        Query queryLibro = em.createQuery("LibroCompraVenta.idMax", LibroCompraVenta.class);
+        Query queryVenta = em.createNativeQuery("INSERT INTO Ventas (Total, Fecha, Numero, Libro_compra_venta_id) VALUES (:total, :fecha, :numero, :idLibro)");
         
         //Declaración de variables
         int idLibro = 0;
@@ -390,6 +379,8 @@ public class jFVentas extends javax.swing.JFrame {
         
         
     }
+    
+    //Métodos/Acciones de botones
     private void AgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AgregarActionPerformed
         
         
@@ -467,7 +458,7 @@ public class jFVentas extends javax.swing.JFrame {
                     }catch (SQLException ex) {
                         Logger.getLogger(Compra.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                    Cantidad.setText("");
+        } Cantidad.setText("");
                     habilitar();
                 }
                 else
