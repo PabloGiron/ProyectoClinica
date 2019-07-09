@@ -88,9 +88,9 @@ public class Cliente extends javax.swing.JFrame {
 
     private void jMenu2MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenu2MousePressed
         // TODO add your handling code here:
-        /*ClienteInventario inventario = new ClienteInventario();
+        ClienteInventario inventario = new ClienteInventario();
         inventario.setVisible(true);
-        this.dispose();*/
+        this.dispose();
     }//GEN-LAST:event_jMenu2MousePressed
 
     /**
