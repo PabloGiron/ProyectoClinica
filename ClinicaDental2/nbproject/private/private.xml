@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-private xmlns="http://www.netbeans.org/ns/project-private/1">
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
+    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
+        <group>
+            <file>file:/C:/Users/oem/Documents/GitHub/ProyectoClinica/ClinicaDental2/src/META-INF/persistence.xml</file>
+            <file>file:/C:/Users/oem/Documents/GitHub/ProyectoClinica/ClinicaDental2/src/ModuloInventario/ModificarProducto.java</file>
+            <file>file:/C:/Users/oem/Documents/GitHub/ProyectoClinica/ClinicaDental2/src/ModuloInventario/EliminarProducto.java</file>
+            <file>file:/C:/Users/oem/Documents/GitHub/ProyectoClinica/ClinicaDental2/src/ModuloInventario/Inventario.java</file>
+            <file>file:/C:/Users/oem/Documents/GitHub/ProyectoClinica/ClinicaDental2/src/ModuloInventario/Producto.java</file>
+            <file>file:/C:/Users/oem/Documents/GitHub/ProyectoClinica/ClinicaDental2/src/ModuloInventario/ClienteInventario2.java</file>
+            <file>file:/C:/Users/oem/Documents/GitHub/ProyectoClinica/ClinicaDental2/src/ModuloInventario/AgregarProducto.java</file>
+            <file>file:/C:/Users/oem/Documents/GitHub/ProyectoClinica/ClinicaDental2/src/ModuloInventario/ProductoJpaController.java</file>
+            <file>file:/C:/Users/oem/Documents/GitHub/ProyectoClinica/ClinicaDental2/src/ModuloInventario/IModificarBD.java</file>
+        </group>
+    </open-files>
+</project-private>
