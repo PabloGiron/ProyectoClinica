@@ -7,6 +7,7 @@ package Singleton;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 
 /**
  *
@@ -24,12 +25,16 @@ public class EntityM {
 
     public static EntityManager getEm() {
         if(em == null){
+            emf = Persistence.createEntityManagerFactory("Clinica");
             em = emf.createEntityManager();
         }
         return em;
     }
 
     public static EntityManagerFactory getEmf() {
+        if(emf == null){
+            emf = Persistence.createEntityManagerFactory("Clinica");
+        }
         return emf;
     }
     

@@ -7,6 +7,7 @@ import javax.persistence.Persistence;
 import javax.persistence.TypedQuery;
 import Entidades.Servicio;
 import Entidades.Ventas;
+import java.util.Date;
 import javax.persistence.Query;
 
 /**
@@ -17,7 +18,7 @@ public class Main {
     public static void main(String[] args) {
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("Clinica");
         EntityManager em = emf.createEntityManager();
-        EntityManager emVentas = emf.createEntityManager();
+        /*EntityManager emVentas = emf.createEntityManager();
         TypedQuery<Servicio> query = em.createNamedQuery("Servicio.findByNombre", Servicio.class);
         query.setParameter("nombre", "Extracción");
         List<Servicio> listaDatos = query.getResultList();
@@ -29,6 +30,10 @@ public class Main {
         int i = (Integer)queryVentas.getSingleResult();
         System.out.println(i);
         em.close();
-        emVentas.close();
+        emVentas.close();*/
+        Query v = em.createNativeQuery("SELECT SUM(Subtotal) FROM detalleventa WHERE detalleventa.Ventas_id = ?");
+        v.setParameter(1, 1);
+        double tot = (Double) v.getSingleResult();
+        System.out.println(tot);
     }
 }
