@@ -7,6 +7,7 @@ import Singleton.EntityM;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import javax.persistence.EntityManager;
@@ -374,9 +375,13 @@ public class jFVentas extends javax.swing.JFrame {
         
         //Declaración de variables
         int idLibro = 0;
-        
+        float total = 0;
+        Date fecha = null;
+       
         idLibro = (Integer)queryLibro.getSingleResult();
         
+        venta.setTotal(total);
+        venta.setFecha(fecha);
         
     }
     

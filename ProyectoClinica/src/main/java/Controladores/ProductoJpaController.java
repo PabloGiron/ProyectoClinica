@@ -5,8 +5,8 @@
  */
 package Controladores;
 
-import Entidades.Producto;
 import Controladores.exceptions.NonexistentEntityException;
+import Entidades.Producto;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.EntityManager;
