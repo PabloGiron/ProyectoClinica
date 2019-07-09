@@ -59,6 +59,6 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>12</maven.compiler.source>
         <maven.compiler.target>12</maven.compiler.target>
-        <property name="driver" value="com.mysql.jdbc.Driver"/>
+        <property name="driver" value="com.mysql.cj.jdbc.Driver"/>
     </properties>
 </project>
