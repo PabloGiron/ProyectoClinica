@@ -1,24 +1,30 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package Controladores;
 
-import Entidades.Producto;
 import Controladores.exceptions.NonexistentEntityException;
+import Entidades.Producto;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
+import javax.persistence.Persistence;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
 /**
  *
- * @author nasc_
+ * @author oem
  */
 public class ProductoJpaController implements Serializable {
 
-    public ProductoJpaController(EntityManagerFactory emf) {
-        this.emf = emf;
+    public ProductoJpaController( ) {
+        this.emf = Persistence.createEntityManagerFactory("Clinica");
     }
     private EntityManagerFactory emf = null;
 
