@@ -36,7 +36,8 @@ import javax.persistence.TemporalType;
     @NamedQuery(name = "Ventas.findByTotal", query = "SELECT v FROM Ventas v WHERE v.total = :total"),
     @NamedQuery(name = "Ventas.findByFecha", query = "SELECT v FROM Ventas v WHERE v.fecha = :fecha"),
     @NamedQuery(name = "Ventas.findByNumero", query = "SELECT v FROM Ventas v WHERE v.numero = :numero"),
-    @NamedQuery(name = "Ventas.idMax", query = "SELECT MAX(v.id) FROM Ventas v")})
+    @NamedQuery(name = "Ventas.idMax", query = "SELECT MAX(v.id) FROM Ventas v"),
+    @NamedQuery(name = "Ventas.findAllFecha", query = "SELECT v FROM Ventas v WHERE v.fecha BETWEEN :inicio AND :fin")})
 
 public class Ventas implements Serializable {
 
