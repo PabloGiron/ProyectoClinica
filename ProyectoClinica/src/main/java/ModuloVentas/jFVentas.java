@@ -1,19 +1,16 @@
 package ModuloVentas;
 
+import Controladores.DetalleventaJpaController;
+import Controladores.VentasJpaController;
 import Entidades.*;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import Singleton.EntityM;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.swing.JOptionPane;
@@ -23,12 +20,14 @@ import javax.swing.table.DefaultTableModel;
 public class jFVentas extends javax.swing.JFrame {
 
     DefaultTableModel modeloTabla;
+    private EntityManager em = EntityM.getEm();
     
     public jFVentas() {
         initComponents();
         llenarCombo();
         setModeloTabla();
         cargarVentas();
+        jBCrear.setEnabled(false);
     }
 
     @SuppressWarnings("unchecked")
@@ -37,11 +36,11 @@ public class jFVentas extends javax.swing.JFrame {
 
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        Nuevos = new javax.swing.JTable();
+        jTNuevos = new javax.swing.JTable();
         jCBServicios = new javax.swing.JComboBox();
         jLabel1 = new javax.swing.JLabel();
-        Agregar = new javax.swing.JButton();
-        Crear = new javax.swing.JButton();
+        jBAgregar = new javax.swing.JButton();
+        jBCrear = new javax.swing.JButton();
         jTFCantidad = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         jTFFactura = new javax.swing.JTextField();
@@ -57,7 +56,7 @@ public class jFVentas extends javax.swing.JFrame {
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Venta"));
 
-        Nuevos.setModel(new javax.swing.table.DefaultTableModel(
+        jTNuevos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -80,21 +79,21 @@ public class jFVentas extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane1.setViewportView(Nuevos);
+        jScrollPane1.setViewportView(jTNuevos);
 
         jLabel1.setText("Servicio");
 
-        Agregar.setText("Agregar Servicio");
-        Agregar.addActionListener(new java.awt.event.ActionListener() {
+        jBAgregar.setText("Agregar Servicio");
+        jBAgregar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                AgregarActionPerformed(evt);
+                jBAgregarActionPerformed(evt);
             }
         });
 
-        Crear.setText("Crear Venta");
-        Crear.addActionListener(new java.awt.event.ActionListener() {
+        jBCrear.setText("Crear Venta");
+        jBCrear.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                CrearActionPerformed(evt);
+                jBCrearActionPerformed(evt);
             }
         });
 
@@ -134,7 +133,7 @@ public class jFVentas extends javax.swing.JFrame {
                         .addContainerGap()
                         .addComponent(Existencias)
                         .addGap(312, 312, 312)
-                        .addComponent(Crear)))
+                        .addComponent(jBCrear)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
@@ -156,7 +155,7 @@ public class jFVentas extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jTFCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(Agregar))))
+                        .addComponent(jBAgregar))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -168,7 +167,7 @@ public class jFVentas extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jCBServicios, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jTFCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(Agregar, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jBAgregar, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jTFFactura, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -177,7 +176,7 @@ public class jFVentas extends javax.swing.JFrame {
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(Crear)
+                    .addComponent(jBCrear)
                     .addComponent(Existencias))
                 .addContainerGap())
         );
@@ -262,16 +261,41 @@ public class jFVentas extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
     
+    //Funciones para limpiar y setear ""
+    public void limpiar()
+    {
+        try
+        {
+            DefaultTableModel modelo=(DefaultTableModel) jTNuevos.getModel();
+            int fil = jTNuevos.getRowCount()-1;
+            for (int i = fil; i >= 0; i--)
+            {
+                modelo.removeRow(i);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public void verificar()
+    {
+        int fil = jTNuevos.getRowCount();
+        if(fil > 0)
+        {
+            limpiar();
+            jBCrear.setEnabled(false);
+        }
+    }
+    
+    
+    
     //Método que se utilizará para llenar el ComboBox con todos los servicios
     private void llenarCombo(){
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("Clinica");
-        EntityManager em = emf.createEntityManager();
         TypedQuery<Servicio> query = em.createNamedQuery("Servicio.findAll", Servicio.class);
         List<Servicio> listaDatos = query.getResultList();
         for(Servicio s : listaDatos){
             jCBServicios.addItem(s.getNombre());
         }
-        em.close();
     }
     
     //Método utilizado para crear el modelo de la tabla donde se muestran las ventas
@@ -315,8 +339,6 @@ public class jFVentas extends javax.swing.JFrame {
     private void cargarVentas(){
         Object o[] = null;
         int posicion = 0;
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("Clinica");
-        EntityManager em = emf.createEntityManager();
         TypedQuery<Ventas> query = em.createNamedQuery("Ventas.findAll", Ventas.class);
         List<Ventas> listaDatos = query.getResultList();
         DateTimeFormatter f = DateTimeFormatter.ofPattern( "E MMM dd HH:mm:ss z uuuu" ).withLocale( Locale.US );
@@ -333,236 +355,140 @@ public class jFVentas extends javax.swing.JFrame {
             posicion++;
         }
         posicion=0;
-        em.close();
     }
     
     //Método para crear DetalleVenta
-    private void crearDetalle(){
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("Clinica");
-        EntityManager emDetalle = emf.createEntityManager();
-        EntityManager emServicio = emf.createEntityManager();
-        EntityManager emVentas = emf.createEntityManager();
-        
+    private void crearDetalle(int linea){
         //Obtención de Querys necesarias 
-        Query queryDetalle = emDetalle.createNativeQuery("INSERT INTO Detalleventa (Subtotal, Cantidad, Servicio_id, Ventas_id) VALUES (:subtotal, :cantidad, :servid, :vid)");
+        Detalleventa detalle = new Detalleventa();
+        DetalleventaJpaController cDetalle = new DetalleventaJpaController(EntityM.getEmf());
+        Servicio servicio = new Servicio();
         
-        TypedQuery<Servicio> queryServicio = emServicio.createNamedQuery("Servicio.findByNombre", Servicio.class);
-        queryServicio.setParameter("nombre", jCBServicios.getSelectedItem());
-        List<Servicio> listaServicio = queryServicio.getResultList();
+        TypedQuery<Servicio> queryServicio = em.createNamedQuery("Servicio.findByNombre", Servicio.class);
+        queryServicio.setParameter("nombre", (String)jTNuevos.getValueAt(linea, 0));
+        servicio = queryServicio.getSingleResult();
         
-        Query queryVentas = emVentas.createNamedQuery("Ventas.idMax", Ventas.class);
+        Query queryVentasId = em.createNamedQuery("Ventas.idMax", Ventas.class);
         // Declaración de variables extra
         float subTotal = 0, precio = 0;
-        int idServicio = 0, idVenta = 0;
+        int idVenta = 0;
+        precio = servicio.getPrecio();
         
-        for(Servicio s : listaServicio){
-            subTotal = s.getPrecio();
-            idServicio = s.getId();
+        idVenta = (Integer)queryVentasId.getSingleResult();
+        TypedQuery<Ventas> queryVentas = em.createNamedQuery("Ventas.findById", Ventas.class);
+        queryVentas.setParameter("id", idVenta);
+        Ventas v = queryVentas.getSingleResult();
+        Servicio s = queryServicio.getSingleResult();
+        try{
+            detalle.setSubtotal(precio*Integer.parseInt((String)jTNuevos.getValueAt(linea, 1)));
+            detalle.setCantidad(Integer.parseInt((String)jTNuevos.getValueAt(linea, 1)));
+            detalle.setServicioid(s);
+            detalle.setVentasid(v);
+            cDetalle.create(detalle);
+        }catch (Exception e){
+            JOptionPane.showMessageDialog(null, e.getMessage());
         }
-        
-        idVenta = (Integer)queryVentas.getSingleResult();
-        queryDetalle.setParameter("subtotal", precio*Integer.parseInt(jTFCantidad.getText()));
-        queryDetalle.setParameter("cantidad", Integer.parseInt(jTFCantidad.getText()));
-        queryDetalle.setParameter("servid", idServicio);
-        queryDetalle.setParameter("vid", idVenta);
-        
-        emDetalle.close();
-        emServicio.close();
-        emVentas.close();
-        emf.close();
     }
     
     //Método para crear Factura
     private void crearFactura(){
-        //Creación de EntityManager de las clases
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("Clinica");
-        EntityManager emVenta = emf.createEntityManager();
-        EntityManager emLibro = emf.createEntityManager();
-        
         //Creación de Querys
-        Query queryLibro = emLibro.createQuery("LibroCompraVenta.idMax", LibroCompraVenta.class);
-        Query queryVenta = emVenta.createNativeQuery("INSERT INTO Ventas (Total, Fecha, Numero, Libro_compra_venta_id) VALUES (:total, :fecha, :numero, :idLibro)");
+        Ventas venta = new Ventas();
+        VentasJpaController cVentas = new VentasJpaController(EntityM.getEmf());
+        LibroCompraVenta lbCV = new LibroCompraVenta();
+        TypedQuery<LibroCompraVenta> queryLibro = em.createNamedQuery("LibroCompraVenta.findById", LibroCompraVenta.class);
+        
+        Query queryLibroId = em.createNamedQuery("LibroCompraVenta.idMax", LibroCompraVenta.class);
         
         //Declaración de variables
         int idLibro = 0;
+        float total = 0;
+        Date fecha = new Date();
         
-        idLibro = (Integer)queryLibro.getSingleResult();
+        idLibro = (Integer)queryLibroId.getSingleResult();
+        queryLibro.setParameter("id", idLibro);
+        lbCV = queryLibro.getSingleResult();
         
-        
-    }
-    private void AgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AgregarActionPerformed
-        
-        
-        
-        /*PreparedStatement Com;
-        int a = 0;
-        int id_libro;
-        Bandera = 1;
-        try {
-            try(FileWriter fw = new FileWriter("\\\\OEM-VAIO\\Users\\oem\\Documents\\GitHub\\BD_Clinica\\Bitacora.txt", true);
-                BufferedWriter bw = new BufferedWriter(fw);
-                PrintWriter out = new PrintWriter(bw))
-            {
-                if(!"".equals(Cantidad.getText()))
-                {
-                    a = Integer.parseInt(Cantidad.getText());
-                }
-
-                if(((!"".equals(Cantidad.getText())) && (!"".equals(factura.getText()))) || (a >= 1))
-                {
-                    if(Nuevos.getRowCount() == 0)
-                    {
-                        try {
-                            //----------------------------------------------------------
-                            PreparedStatement InicioTransaccion = conexion.prepareStatement("START TRANSACTION");
-                            InicioTransaccion.executeUpdate();
-                            AumentarNumTransaccion();
-                            out.println("<T"+NumTransaccion+",START TRANSACTION>");
-
-                            //-------------------------------------------
-                            String sql2 = "SELECT MAX(Libro_compra_venta.ID) FROM Libro_compra_venta;";
-                            sent = conexion.createStatement();
-                            ResultSet rs = sent.executeQuery(sql2);
-                            rs.next();
-                            id_libro = Integer.parseInt(rs.getString(1));
-                            String sql_venta = "INSERT INTO Ventas (Total, Fecha, Numero, Libro_compra_venta_id) VALUES(0, NOW(), '"+factura.getText()+"', "+ id_libro +")";
-                            PreparedStatement ps;
-                            Date date = new Date();
-                            DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-                            out.println("<T"+NumTransaccion+",Escritura tabla ventas,0,"+dateFormat.format(date)+","+factura.getText()+","+id_libro+">");
-                            ps = conexion.prepareCall(sql_venta);
-                            int n = ps.executeUpdate();
-
-                            if (n > 0)
-                            {
-
-                            }
-                        } catch (SQLException ex) {
-                            Logger.getLogger(Venta_na.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-                    }
-                    String  fila[] = new String [2];
-                    DefaultTableModel modelo = (DefaultTableModel) Nuevos.getModel();
-                    fila[0] = (String)Servicios.getSelectedItem();
-                    fila[1] = Cantidad.getText();
-                    modelo.addRow(fila);
-                    try {
-                        String id_s, sub, p, m;
-                        float precio = 0, subtotal = 0, cant = 0;
-                        int id_v = Venta_id();
-                        String s, v;
-                        v = Float.toString(id_v);
-                        String sql2 = "SELECT Servicio.ID, Servicio.Precio FROM Servicio WHERE Servicio.Nombre = '" + Nuevos.getValueAt(Nuevos.getRowCount()-1, 0) + "';";
-                        sent = conexion.createStatement();
-                        ResultSet rs = sent.executeQuery(sql2);
-                        rs.next();
-                        id_s = (rs.getString(1));
-                        p = rs.getString("Servicio.precio");
-                        precio = Float.parseFloat(p);
-                        m = (String)Nuevos.getValueAt(Nuevos.getRowCount()-1, 1);
-                        cant = Integer.parseInt(m);
-                        subtotal = precio * cant;
-                        sub = Float.toString(subtotal);
-                        out.println("<T"+NumTransaccion+",Escritura tabla detalleventa,"+sub+","+(String)Nuevos.getValueAt(Nuevos.getRowCount()-1, 1)+","+v+","+id_s+">");
-                    }catch (SQLException ex) {
-                        Logger.getLogger(Compra.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                    Cantidad.setText("");
-                    habilitar();
-                }
-                else
-                {
-
-                    
-
-                    JOptionPane.showMessageDialog(this, "Debe llenar el espacio cantidad y/o factura para proceder");
-                }}}catch (IOException e) {}*/
-    }//GEN-LAST:event_AgregarActionPerformed
-
-    private void CrearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CrearActionPerformed
-       /* try {
-            try(FileWriter fw = new FileWriter("\\\\OEM-VAIO\\Users\\oem\\Documents\\GitHub\\BD_Clinica\\Bitacora.txt", true);
-                BufferedWriter bw = new BufferedWriter(fw);
-                PrintWriter out = new PrintWriter(bw))
-            {
-                //String sql = "INSERT INTO DetalleVenta (Subtotal, Cantidad, Ventas_ID, Servicio_ID)" + "VALUES(?,?,?,?)";
-
-                String id_s, sub, p, m;
-                float precio = 0, subtotal = 0, cant = 0;
-                int id_v = Venta_id();
-                String s, v;
-                v = Float.toString(id_v);
-                float total = 0;
-                for(int i = 0; i < Nuevos.getRowCount(); i++)
-                {
-
-                    String sql2 = "SELECT Servicio.ID, Servicio.Precio FROM Servicio WHERE Servicio.Nombre = '" + Nuevos.getValueAt(i, 0) + "';";
-                    sent = conexion.createStatement();
-                    ResultSet rs = sent.executeQuery(sql2);
-                    rs.next();
-                    id_s = (rs.getString(1));
-                    p = rs.getString("Servicio.precio");
-                    precio = Float.parseFloat(p);
-                    m = (String)Nuevos.getValueAt(i, 1);
-                    cant = Float.parseFloat(m);
-                    subtotal = precio * cant;
-                    System.out.println(m);
-                    sub = Float.toString(subtotal);
-                    System.out.println(subtotal);
-
-                    String sql = "INSERT INTO DetalleVenta (Subtotal, Cantidad, Ventas_ID, Servicio_ID)" + "VALUES(?,?,?,?)";
-                    PreparedStatement ps = conexion.prepareCall(sql);
-                    ps.setString(1, sub);
-                    ps.setString(2, (String)Nuevos.getValueAt(i, 1));
-                    ps.setString(3, v);
-                    ps.setString(4, id_s);
-                    int n = ps.executeUpdate();
-                    if (n > 0) {
-                        JOptionPane.showMessageDialog(null, "Datos Guardados Correctamente");
-                        out.println("<T"+NumTransaccion+",Escritura tabla detalleventa,"+sub+","+(String)Nuevos.getValueAt(i, 1)+","+v+","+id_s+">");
-
-                    }
-
-                    total = total + subtotal;
-
-                    /*------------------------------------------------------------------------*/
-                    /*ResultSet rs2 = null;
-
-                    String sql45 = "SELECT MAX(id) FROM ventas";
-                    Statement stmt2 = conexion.createStatement();
-                    rs2 = stmt2.executeQuery(sql45);
-                    int id2 =0;
-                    while(rs2.next()){
-                        //System.out.println(rs.getInt(1));
-                        id2 = rs2.getInt(1);
-                    }
-                    String sql23 = ("SELECT * FROM ventas WHERE id = '"+id2+"'");
-                    stmt2 = conexion.createStatement();
-                    rs2 = stmt2.executeQuery(sql23);
-                    while(rs2.next()){
-                        //System.out.println(rs.getInt(1));
-                        total = rs2.getInt(2);
-                    }
-                    PreparedStatement pst = conexion.prepareStatement("INSERT INTO finanzas(Ingresos,Egresos,Fecha) VALUES('"+total+"',0,NOW())");
-                    pst.executeUpdate();
-
-                    /*-------------------------------------------------------------------------
-
-                }
-                totalventa(id_v, Float.toString(total));
-                PreparedStatement Com = conexion.prepareStatement("COMMIT");
-                Com.executeUpdate();
-                out.println("<T"+NumTransaccion+",Commit>");
-                Bandera = 0;
-            }catch (IOException e) {}  }catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Error" + e.getMessage());
+        try{
+            venta.setTotal(total);
+            venta.setFecha(fecha);
+            venta.setNumero(jTFFactura.getText());
+            venta.setLibrocompraventaid(lbCV);
+            cVentas.create(venta);
+        }catch (Exception e){
+            JOptionPane.showMessageDialog(null, e.getMessage());
         }
-        verificar();
-        //cargar();
-        carga();
-        factura.setText("");*/
+    }
+    
+    //Método para actualizar el total de la venta
+    private void totalVenta(){
+        Ventas venta = new Ventas();
+        VentasJpaController cVentas = new VentasJpaController(EntityM.getEmf());
+        
+        Query queryVentaId = em.createNamedQuery("Ventas.idMax", Ventas.class);
+        int idVenta = (Integer)queryVentaId.getSingleResult();
+        
+        Query queryVenta = em.createNamedQuery("Ventas.findById", Ventas.class);
+        queryVenta.setParameter("id", idVenta);
+        venta = (Ventas)queryVenta.getSingleResult();
+        
+        System.out.println(venta.getId());
+        
+        Query detallev = em.createNativeQuery("SELECT SUM(Subtotal) FROM detalleventa WHERE detalleventa.Ventas_id = ?");
+        detallev.setParameter(1, idVenta);
+        double tot = (Double) detallev.getSingleResult();
+        
+        float total = (float) tot;
+        System.out.println(total);
+        try{
+            venta.setTotal(total);
+            cVentas.edit(venta);
+        }catch (Exception e){
+            JOptionPane.showMessageDialog(null, e.getMessage());
+        }
+    }
+    
+    //Métodos/Acciones de botones
+    private void jBAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBAgregarActionPerformed
+        int a = 0;
+        
+        if(!"".equals(jTFCantidad.getText()))
+        {
+            a = Integer.parseInt(jTFCantidad.getText());
+        }
 
-    }//GEN-LAST:event_CrearActionPerformed
+        if(((!"".equals(jTFCantidad.getText())) && (!"".equals(jTFFactura.getText()))) || (a >= 1))
+        {
+            /*if(jTNuevos.getRowCount() == 0)
+            {
+                crearFactura(); 
+            }*/
+            String  fila[] = new String [2];
+            DefaultTableModel modelo = (DefaultTableModel) jTNuevos.getModel();
+            fila[0] = (String)jCBServicios.getSelectedItem();
+            fila[1] = jTFCantidad.getText();
+            modelo.addRow(fila);
+        }    
+        else
+        {
+            JOptionPane.showMessageDialog(this, "Debe llenar el espacio cantidad y/o factura para proceder");
+        }
+        jTFCantidad.setText("");
+        jBCrear.setEnabled(true);
+    }//GEN-LAST:event_jBAgregarActionPerformed
+
+    private void jBCrearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBCrearActionPerformed
+        crearFactura();
+        for(int i = 0; i < jTNuevos.getRowCount(); i++)
+        {
+            crearDetalle(i);
+        }
+        totalVenta();
+        verificar();
+        cargarVentas();
+        jTFFactura.setText("");
+
+    }//GEN-LAST:event_jBCrearActionPerformed
 
     private void ExistenciasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ExistenciasActionPerformed
         /*
@@ -636,11 +562,10 @@ public class jFVentas extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton Agregar;
-    private javax.swing.JButton Crear;
     private javax.swing.JTextArea Detalle;
     private javax.swing.JButton Existencias;
-    private javax.swing.JTable Nuevos;
+    private javax.swing.JButton jBAgregar;
+    private javax.swing.JButton jBCrear;
     private javax.swing.JComboBox jCBServicios;
     private javax.swing.JTable jFVentas;
     private javax.swing.JLabel jLabel1;
@@ -653,5 +578,6 @@ public class jFVentas extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTextField jTFCantidad;
     private javax.swing.JTextField jTFFactura;
+    private javax.swing.JTable jTNuevos;
     // End of variables declaration//GEN-END:variables
 }

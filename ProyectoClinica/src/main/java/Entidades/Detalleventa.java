@@ -29,6 +29,7 @@ import javax.persistence.Table;
     @NamedQuery(name = "Detalleventa.findById", query = "SELECT d FROM Detalleventa d WHERE d.id = :id"),
     @NamedQuery(name = "Detalleventa.findBySubtotal", query = "SELECT d FROM Detalleventa d WHERE d.subtotal = :subtotal"),
     @NamedQuery(name = "Detalleventa.findByCantidad", query = "SELECT d FROM Detalleventa d WHERE d.cantidad = :cantidad")})
+
 public class Detalleventa implements Serializable {
 
     private static final long serialVersionUID = 1L;
