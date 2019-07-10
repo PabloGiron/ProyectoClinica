@@ -8,6 +8,7 @@ package Entidades;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -34,6 +35,9 @@ import javax.persistence.Table;
     @NamedQuery(name = "Paciente.findByNit", query = "SELECT p FROM Paciente p WHERE p.nit = :nit"),
     @NamedQuery(name = "Paciente.findByDireccion", query = "SELECT p FROM Paciente p WHERE p.direccion = :direccion")})
 public class Paciente implements Serializable {
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "pacienteid")
+    private List<Historialpaciente> historialpacienteList;
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -141,6 +145,14 @@ public class Paciente implements Serializable {
     @Override
     public String toString() {
         return "Entidades.Paciente[ id=" + id + " ]";
+    }
+
+    public List<Historialpaciente> getHistorialpacienteList() {
+        return historialpacienteList;
+    }
+
+    public void setHistorialpacienteList(List<Historialpaciente> historialpacienteList) {
+        this.historialpacienteList = historialpacienteList;
     }
     
 }
