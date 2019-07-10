@@ -2,17 +2,19 @@
 <persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
   <persistence-unit name="Clinica" transaction-type="RESOURCE_LOCAL">
     <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
-    <class>Entidades.Detalleventa</class>
-    <class>Entidades.Ventas</class>
-    <class>Entidades.Compra</class>
-    <class>Entidades.Detallecompra</class>
     <class>Entidades.Empleados</class>
+    <class>Entidades.Telefonos</class>
+    <class>Entidades.Detalleventa</class>
+    <class>Entidades.Compra</class>
     <class>Entidades.Historial</class>
     <class>Entidades.LibroCompraVenta</class>
-    <class>Entidades.Producto</class>
-    <class>Entidades.Saldoextra</class>
+    <class>Entidades.Ventas</class>
+    <class>Entidades.Detallecompra</class>
     <class>Entidades.Servicio</class>
-    <class>Entidades.Telefonos</class>
+    <class>Entidades.Saldoextra</class>
+    <class>Entidades.Producto_1</class>
+    <class>Entidades.Producto_</class>
+    <class>Entidades.Producto</class>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/bd_clinica"/>
       <property name="javax.persistence.jdbc.user" value="root"/>

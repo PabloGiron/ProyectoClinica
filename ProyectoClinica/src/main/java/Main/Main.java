@@ -1,7 +1,6 @@
 package Main;
 
 import Entidades.Detalleventa;
-import Entidades.Producto;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -33,12 +32,11 @@ public class Main {
         System.out.println(i);
         em.close();
         emVentas.close();*/
-        String f = "f";
-        Query v = em.createQuery("SELECT p FROM Producto p WHERE p.nombre Like :nombre");
-        v.setParameter("nombre", (f+"%").toLowerCase());
-        List<Producto> listaDatos = v.getResultList();
-        for(Producto lista : listaDatos){
-            System.out.println(lista.getNombre());
+        Query v = em.createNativeQuery("SELECT servicio.Nombre, detalleventa.Cantidad, detalleventa.Subtotal FROM Servicio INNER JOIN detalleventa ON Servicio.id = detalleventa.Servicio_id WHERE detalleventa.Ventas_id = ?;");
+        v.setParameter(1, 1);
+        List<Object[]> listaDatos = v.getResultList();
+        for(Object[] lista : listaDatos){
+            System.out.println(lista[0] + " " + lista[1] + " " + lista[2]);
         }
         em.close();
     }
