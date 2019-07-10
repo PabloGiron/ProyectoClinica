@@ -1,11 +1,16 @@
 package ModuloVentas;
 
+import ModelosTablas.ModeloTablaDetalles;
+import ModelosTablas.ModeloTablaVentas;
 import Controladores.DetalleventaJpaController;
 import Controladores.VentasJpaController;
-import Entidades.*;
+import Entidades.Detalleventa;
+import Entidades.Servicio;
+import Entidades.Ventas;
+import Entidades.LibroCompraVenta;
+import ModelosTablas.ModeloTablaContexto;
 import Singleton.EntityM;
 import java.beans.PropertyChangeListener;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -26,8 +31,7 @@ public class jFVentas extends javax.swing.JFrame {
 
     private DefaultTableModel modeloTabla;
     private EntityManager em = EntityM.getEm();
-    private ACModeloTabla modV = new ModeloTablaVentas();
-    private ACModeloTabla modD = new ModeloTablaDetalles();
+    private ModeloTablaContexto modTC = null;
     private Calendar c = new GregorianCalendar();
     
     public jFVentas() {
@@ -371,13 +375,15 @@ public class jFVentas extends javax.swing.JFrame {
     //Método utilizado para crear el modelo de la tabla donde se muestran las ventas
     private void setModeloTabla(){
         try {
-            modeloTabla = modV.getModelo();
+            modTC = new ModeloTablaContexto(new ModeloTablaVentas());
+            modeloTabla = modTC.ejecutarModel();
             jTVentas.setModel(modeloTabla);
             jTVentas.getColumnModel().getColumn(0).setMaxWidth(0);
             jTVentas.getColumnModel().getColumn(0).setMinWidth(0);
             jTVentas.getColumnModel().getColumn(0).setPreferredWidth(0);
             jTVentas.getColumnModel().getColumn(0).setResizable(false);
-            modeloTabla = modD.getModelo();
+            modTC = new ModeloTablaContexto(new ModeloTablaDetalles());
+            modeloTabla = modTC.ejecutarModel();
             jTDetalles.setModel(modeloTabla);
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, e.toString() + "error2");
@@ -439,11 +445,10 @@ public class jFVentas extends javax.swing.JFrame {
         
         Query queryVentasId = em.createNamedQuery("Ventas.idMax", Ventas.class);
         // Declaración de variables extra
-        float subTotal = 0, precio = 0;
-        int idVenta = 0;
-        precio = servicio.getPrecio();
         
-        idVenta = (Integer)queryVentasId.getSingleResult();
+        float precio = servicio.getPrecio();
+        
+        int idVenta = (Integer)queryVentasId.getSingleResult();
         TypedQuery<Ventas> queryVentas = em.createNamedQuery("Ventas.findById", Ventas.class);
         queryVentas.setParameter("id", idVenta);
         Ventas v = queryVentas.getSingleResult();
@@ -472,7 +477,7 @@ public class jFVentas extends javax.swing.JFrame {
         //Declaración de variables
         int idLibro = 0;
         float total = 0;
-        Date fecha = new Date();
+        Date fecha = jDCFecha.getDate();
         
         idLibro = (Integer)queryLibroId.getSingleResult();
         queryLibro.setParameter("id", idLibro);
@@ -551,7 +556,6 @@ public class jFVentas extends javax.swing.JFrame {
         verificar();
         cargarVentas(jDCFecha.getDate());
         jTFFactura.setText("");
-
     }//GEN-LAST:event_jBCrearActionPerformed
 
     private void ExistenciasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ExistenciasActionPerformed
@@ -565,9 +569,11 @@ public class jFVentas extends javax.swing.JFrame {
         //AL DARLE DOBLE CLICK A UNA FILA, BUSCARÁ LOS DETALLES DE LA VENTA Y LOS SETEARÁ A LA TABLA
         if(evt.getButton() == 1)
         {
-          limpiarDetalles();
             int fila = jTVentas.getSelectedRow();
-            cargarDetalles((Integer)jTVentas.getValueAt(fila, 0));  
+            if(fila >= 0){
+              limpiarDetalles();
+              cargarDetalles((Integer)jTVentas.getValueAt(fila, 0));
+            }    
         }
     }//GEN-LAST:event_jTVentasMouseClicked
 
