@@ -250,5 +250,20 @@ public class TutorpacienteJpaController implements Serializable {
             em.close();
         }
     }
-    
+
+    public void actualizarTutor(String nombre, String direccion, String telefono, int id){
+        EntityManager em = null;
+        try{
+            em = getEntityManager();
+            em.getTransaction().begin();
+            Query queryUpdate = em.createNativeQuery("UPDATE tutorpaciente INNER JOIN telefono ON tutorpaciente.id = telefono.TutorPaciente_id SET tutorpaciente.Nombre = '"+nombre+"', tutorpaciente.Direccion = '"+direccion+"', telefono.Numero = '"+telefono+"' WHERE tutorpaciente.id = "+id+" ;");
+            queryUpdate.executeUpdate();
+            em.getTransaction().commit();
+        }finally {
+            if (em != null) {
+                em.close();
+            }
+        }
+        
+    }
 }

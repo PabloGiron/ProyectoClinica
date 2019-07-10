@@ -1,3 +1,4 @@
+ModuloPacientes\CrearPacientes$5.class
 ModuloPacientes\ClientePacientes.class
 ModuloPacientes\CrearPacientes$2.class
 ModuloPacientes\ClientePacientes$2.class
@@ -6,6 +7,7 @@ Main\Cliente$4.class
 ModuloPacientes\CrearTutor.class
 ModuloVentas\jFVentas$2.class
 ModuloPacientes\CrearTutor$4.class
+ModuloPacientes\ClientePacientes$5.class
 ModuloPacientes\CrearPacientes.class
 Entidades\Detalleventa_.class
 ModuloPacientes\CrearTutor$7.class
@@ -15,10 +17,13 @@ ModuloVentas\jFVentas$5.class
 ModuloInventario\ClienteInventario$5.class
 ModuloVentas\jFVentas$8.class
 Entidades\Empleados_.class
+ModuloPacientes\CrearPacientes$7.class
 Entidades\Ventas_.class
+ModuloPacientes\CrearTutor$8.class
 Entidades\LibroCompraVenta_.class
 Controladores\DetallecompraJpaController.class
 ModuloPacientes\CrearTutor$1.class
+ModuloPacientes\ClientePacientes$4.class
 Entidades\Compra_.class
 Entidades\Detallecompra_.class
 ModuloVentas\jFVentas$9.class
@@ -38,6 +43,7 @@ ModuloPacientes\CrearTutor$6.class
 Entidades\Paciente_.class
 Entidades\Producto_.class
 Singleton\EntityM.class
+ModuloPacientes\CrearPacientes$6.class
 ModuloVentas\ModeloTablaDetalles$1.class
 ModuloInventario\InventarioPrincipal$4.class
 Entidades\Telefono_.class
