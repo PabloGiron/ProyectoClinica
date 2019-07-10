@@ -12,7 +12,7 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author nasc_
  */
-public class ModeloTablaVentas extends ACModeloTabla{
+public class ModeloTablaVentas extends AbsModeloTabla{
     @Override
     public DefaultTableModel getModelo() {
         DefaultTableModel modelo = null;

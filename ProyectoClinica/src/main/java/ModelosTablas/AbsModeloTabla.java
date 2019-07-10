@@ -11,6 +11,6 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author nasc_
  */
-public abstract class ACModeloTabla {
+public abstract class AbsModeloTabla {
     public abstract DefaultTableModel getModelo();    
 }
