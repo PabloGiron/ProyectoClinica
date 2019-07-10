@@ -1,5 +1,6 @@
 package Main;
 
+import Entidades.Detalleventa;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -31,9 +32,12 @@ public class Main {
         System.out.println(i);
         em.close();
         emVentas.close();*/
-        Query v = em.createNativeQuery("SELECT SUM(Subtotal) FROM detalleventa WHERE detalleventa.Ventas_id = ?");
+        Query v = em.createNativeQuery("SELECT servicio.Nombre, detalleventa.Cantidad, detalleventa.Subtotal FROM Servicio INNER JOIN detalleventa ON Servicio.id = detalleventa.Servicio_id WHERE detalleventa.Ventas_id = ?;");
         v.setParameter(1, 1);
-        double tot = (Double) v.getSingleResult();
-        System.out.println(tot);
+        List<Object[]> listaDatos = v.getResultList();
+        for(Object[] lista : listaDatos){
+            System.out.println(lista[0] + " " + lista[1] + " " + lista[2]);
+        }
+        em.close();
     }
 }

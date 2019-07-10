@@ -4,14 +4,19 @@ import Controladores.DetalleventaJpaController;
 import Controladores.VentasJpaController;
 import Entidades.*;
 import Singleton.EntityM;
+import java.beans.PropertyChangeListener;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
+import javax.persistence.TemporalType;
 import javax.persistence.TypedQuery;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
@@ -19,15 +24,20 @@ import javax.swing.table.DefaultTableModel;
 
 public class jFVentas extends javax.swing.JFrame {
 
-    DefaultTableModel modeloTabla;
+    private DefaultTableModel modeloTabla;
     private EntityManager em = EntityM.getEm();
+    private ACModeloTabla modV = new ModeloTablaVentas();
+    private ACModeloTabla modD = new ModeloTablaDetalles();
+    private Calendar c = new GregorianCalendar();
     
     public jFVentas() {
         initComponents();
         llenarCombo();
         setModeloTabla();
-        cargarVentas();
+        cargarVentas(c.getTime());
+        jDCFecha.setCalendar(c);
         jBCrear.setEnabled(false);
+        agregarEvento();
     }
 
     @SuppressWarnings("unchecked")
@@ -48,9 +58,11 @@ public class jFVentas extends javax.swing.JFrame {
         Existencias = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jFVentas = new javax.swing.JTable();
-        jScrollPane3 = new javax.swing.JScrollPane();
-        Detalle = new javax.swing.JTextArea();
+        jTVentas = new javax.swing.JTable();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        jTDetalles = new javax.swing.JTable();
+        jDCFecha = new com.toedter.calendar.JDateChooser();
+        jLabel4 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -135,27 +147,30 @@ public class jFVentas extends javax.swing.JFrame {
                         .addGap(312, 312, 312)
                         .addComponent(jBCrear)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+            .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(89, 89, 89)
+                                .addComponent(jLabel1))
+                            .addComponent(jCBServicios, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(20, 20, 20)
+                                .addComponent(jLabel2)
+                                .addGap(157, 157, 157))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jTFCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jBAgregar))))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel3)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTFFactura, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(89, 89, 89)
-                        .addComponent(jLabel1))
-                    .addComponent(jCBServicios, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(20, 20, 20)
-                        .addComponent(jLabel2)
-                        .addGap(157, 157, 157))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jTFCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jBAgregar))))
+                        .addComponent(jTFFactura, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -168,12 +183,12 @@ public class jFVentas extends javax.swing.JFrame {
                     .addComponent(jCBServicios, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jTFCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jBAgregar, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jTFFactura, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3))
                 .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jBCrear)
@@ -183,14 +198,14 @@ public class jFVentas extends javax.swing.JFrame {
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Ventas realizadas"));
 
-        jFVentas = new JTable(){
+        jTVentas = new JTable(){
             @Override
             public boolean isCellEditable(int rowIndex, int colIndex) {
 
                 return false; //Las celdas no son editables.
             }
         };
-        jFVentas.setModel(new javax.swing.table.DefaultTableModel(
+        jTVentas.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {},
                 {},
@@ -201,18 +216,26 @@ public class jFVentas extends javax.swing.JFrame {
 
             }
         ));
-        jFVentas.addMouseListener(new java.awt.event.MouseAdapter() {
+        jTVentas.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jFVentasMouseClicked(evt);
+                jTVentasMouseClicked(evt);
             }
         });
-        jScrollPane2.setViewportView(jFVentas);
+        jScrollPane2.setViewportView(jTVentas);
 
-        Detalle.setEditable(false);
-        Detalle.setColumns(20);
-        Detalle.setRows(5);
-        Detalle.setText("Detalles de venta...");
-        jScrollPane3.setViewportView(Detalle);
+        jTDetalles.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+
+            }
+        ));
+        jScrollPane4.setViewportView(jTDetalles);
+
+        jDCFecha.setToolTipText("");
+
+        jLabel4.setText("Seleccionar fecha:");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -221,17 +244,27 @@ public class jFVentas extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 492, Short.MAX_VALUE)
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 492, Short.MAX_VALUE))
+                    .addComponent(jScrollPane4)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 499, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                        .addGap(127, 127, 127)
+                        .addComponent(jLabel4)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jDCFecha, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jDCFecha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel4))
+                .addGap(18, 18, 18)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -248,26 +281,63 @@ public class jFVentas extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
     
+    //FUNCION PARA AGREGAR EVENTO
+    public void agregarEvento(){
+        jDCFecha.getDateEditor().addPropertyChangeListener(new PropertyChangeListener(){
+            public void propertyChange(java.beans.PropertyChangeEvent e) {
+                if("date".equals(e.getPropertyName())){
+                    cargarVentas((Date)e.getNewValue());
+                }
+            }
+        });
+    }
+    
     //Funciones para limpiar y setear ""
-    public void limpiar()
+    public void limpiarRegistros()
     {
         try
         {
             DefaultTableModel modelo=(DefaultTableModel) jTNuevos.getModel();
             int fil = jTNuevos.getRowCount()-1;
+            for (int i = fil; i >= 0; i--)
+            {
+                modelo.removeRow(i);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    public void limpiarDetalles()
+    {
+        try
+        {
+            DefaultTableModel modelo=(DefaultTableModel) jTDetalles.getModel();
+            int fil = jTDetalles.getRowCount()-1;
+            for (int i = fil; i >= 0; i--)
+            {
+                modelo.removeRow(i);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    public void limpiarVentas()
+    {
+        try
+        {
+            DefaultTableModel modelo=(DefaultTableModel) jTVentas.getModel();
+            int fil = jTVentas.getRowCount()-1;
             for (int i = fil; i >= 0; i--)
             {
                 modelo.removeRow(i);
@@ -282,7 +352,7 @@ public class jFVentas extends javax.swing.JFrame {
         int fil = jTNuevos.getRowCount();
         if(fil > 0)
         {
-            limpiar();
+            limpiarRegistros();
             jBCrear.setEnabled(false);
         }
     }
@@ -301,49 +371,32 @@ public class jFVentas extends javax.swing.JFrame {
     //Método utilizado para crear el modelo de la tabla donde se muestran las ventas
     private void setModeloTabla(){
         try {
-            modeloTabla = (new DefaultTableModel(
-                    null, new String[]{
-                        "", "Total",
-                        "Fecha","No. Factura"}) {
-                Class[] types = new Class[]{
-                    java.lang.String.class,
-                    java.lang.String.class,
-                    java.lang.String.class,
-                    java.lang.String.class
-                };
-                boolean[] canEdit = new boolean[]{
-                    false, false, false, false
-                };
-                
-                @Override
-                public Class getColumnClass(int columnIndex) {
-                    return types[columnIndex];
-                }
-
-                @Override
-                public boolean isCellEditable(int rowIndex, int colIndex) {
-                    return canEdit[colIndex];
-                }
-            });
-            jFVentas.setModel(modeloTabla);
-            jFVentas.getColumnModel().getColumn(0).setMaxWidth(0);
-            jFVentas.getColumnModel().getColumn(0).setMinWidth(0);
-            jFVentas.getColumnModel().getColumn(0).setPreferredWidth(0);
-            jFVentas.getColumnModel().getColumn(0).setResizable(false);
+            modeloTabla = modV.getModelo();
+            jTVentas.setModel(modeloTabla);
+            jTVentas.getColumnModel().getColumn(0).setMaxWidth(0);
+            jTVentas.getColumnModel().getColumn(0).setMinWidth(0);
+            jTVentas.getColumnModel().getColumn(0).setPreferredWidth(0);
+            jTVentas.getColumnModel().getColumn(0).setResizable(false);
+            modeloTabla = modD.getModelo();
+            jTDetalles.setModel(modeloTabla);
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, e.toString() + "error2");
         }
     }
     
     //Método utilizado para cargar los datos en la tabla
-    private void cargarVentas(){
+    private void cargarVentas(Date fecha){
+        limpiarVentas();
         Object o[] = null;
         int posicion = 0;
-        TypedQuery<Ventas> query = em.createNamedQuery("Ventas.findAll", Ventas.class);
+        TypedQuery<Ventas> query = em.createNamedQuery("Ventas.findAllFecha", Ventas.class);
+        query.setParameter("inicio", fecha, TemporalType.DATE);
+        query.setParameter("fin", fecha, TemporalType.DATE);
         List<Ventas> listaDatos = query.getResultList();
         DateTimeFormatter f = DateTimeFormatter.ofPattern( "E MMM dd HH:mm:ss z uuuu" ).withLocale( Locale.US );
         ZonedDateTime zdt = null;
         LocalDate ld = null;
+        modeloTabla = (DefaultTableModel)jTVentas.getModel();
         for(Ventas v : listaDatos){
             modeloTabla.addRow(o);
             modeloTabla.setValueAt(v.getId(), posicion, 0);
@@ -354,6 +407,22 @@ public class jFVentas extends javax.swing.JFrame {
             modeloTabla.setValueAt(v.getNumero(), posicion, 3);
             posicion++;
         }
+        posicion=0;
+    }
+    private void cargarDetalles(int id){
+        Object o[] = null;
+        int posicion = 0;
+        Query v = em.createNativeQuery("SELECT servicio.Nombre, detalleventa.Cantidad, detalleventa.Subtotal FROM Servicio INNER JOIN detalleventa ON Servicio.id = detalleventa.Servicio_id WHERE detalleventa.Ventas_id = ?;");
+        v.setParameter(1, id);
+        List<Object[]> listaDatos = v.getResultList();
+        modeloTabla = (DefaultTableModel)jTDetalles.getModel();
+        for(Object[] lista : listaDatos){
+            modeloTabla.addRow(o);
+            modeloTabla.setValueAt(lista[0], posicion, 0);
+            modeloTabla.setValueAt(lista[1], posicion, 1);
+            modeloTabla.setValueAt(lista[2], posicion, 2);
+            posicion++;
+        }       
         posicion=0;
     }
     
@@ -432,17 +501,14 @@ public class jFVentas extends javax.swing.JFrame {
         queryVenta.setParameter("id", idVenta);
         venta = (Ventas)queryVenta.getSingleResult();
         
-        System.out.println(venta.getId());
-        
         Query detallev = em.createNativeQuery("SELECT SUM(Subtotal) FROM detalleventa WHERE detalleventa.Ventas_id = ?");
         detallev.setParameter(1, idVenta);
         double tot = (Double) detallev.getSingleResult();
         
         float total = (float) tot;
-        System.out.println(total);
         try{
             venta.setTotal(total);
-            cVentas.edit(venta);
+            cVentas.updateTotal(venta);
         }catch (Exception e){
             JOptionPane.showMessageDialog(null, e.getMessage());
         }
@@ -459,10 +525,6 @@ public class jFVentas extends javax.swing.JFrame {
 
         if(((!"".equals(jTFCantidad.getText())) && (!"".equals(jTFFactura.getText()))) || (a >= 1))
         {
-            /*if(jTNuevos.getRowCount() == 0)
-            {
-                crearFactura(); 
-            }*/
             String  fila[] = new String [2];
             DefaultTableModel modelo = (DefaultTableModel) jTNuevos.getModel();
             fila[0] = (String)jCBServicios.getSelectedItem();
@@ -478,6 +540,8 @@ public class jFVentas extends javax.swing.JFrame {
     }//GEN-LAST:event_jBAgregarActionPerformed
 
     private void jBCrearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBCrearActionPerformed
+        //ESTE BOTÓN SERVIRÁ PARA CREAR LA FACTURA Y LUEGO CREAR CADA UNO DE LOS DETALLES DE LA MISMA 
+        //Y COMO FINAL ACUALIZAR EL TOTAL EN LA VENTA
         crearFactura();
         for(int i = 0; i < jTNuevos.getRowCount(); i++)
         {
@@ -485,7 +549,7 @@ public class jFVentas extends javax.swing.JFrame {
         }
         totalVenta();
         verificar();
-        cargarVentas();
+        cargarVentas(jDCFecha.getDate());
         jTFFactura.setText("");
 
     }//GEN-LAST:event_jBCrearActionPerformed
@@ -497,28 +561,15 @@ public class jFVentas extends javax.swing.JFrame {
         new Reduc(conexion,this).setVisible(true);*/
     }//GEN-LAST:event_ExistenciasActionPerformed
 
-    private void jFVentasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jFVentasMouseClicked
-        /*
+    private void jTVentasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTVentasMouseClicked
+        //AL DARLE DOBLE CLICK A UNA FILA, BUSCARÁ LOS DETALLES DE LA VENTA Y LOS SETEARÁ A LA TABLA
         if(evt.getButton() == 1)
         {
-            Detalle.setText("");
-            int fila = Ventas.getSelectedRow();
-            String nombre,cantidad,subtotal;
-            try {
-                String sql = "SELECT servicio.Nombre, detalleventa.Cantidad, detalleventa.Subtotal FROM Servicio INNER JOIN detalleventa ON Servicio.id = detalleventa.Servicio_id WHERE detalleventa.Ventas_id = " + Ventas.getValueAt(fila, 0) + ";";
-                sent = conexion.createStatement();
-                ResultSet rs = sent.executeQuery(sql);
-                while (rs.next()) {
-                    nombre = rs.getString("servicio.Nombre");
-                    cantidad = rs.getString("detalleventa.Cantidad");
-                    subtotal = rs.getString("detalleventa.Subtotal");
-                    Detalle.setText(Detalle.getText() +"\n" + "Nombre: " + nombre + "\n" + "Cantidad: " + cantidad + "\n" + "Subtotal: " + subtotal + "\n");
-                }
-            } catch (SQLException ex) {
-                Logger.getLogger(Venta_na.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }*/
-    }//GEN-LAST:event_jFVentasMouseClicked
+          limpiarDetalles();
+            int fila = jTVentas.getSelectedRow();
+            cargarDetalles((Integer)jTVentas.getValueAt(fila, 0));  
+        }
+    }//GEN-LAST:event_jTVentasMouseClicked
 
     private void jTFCantidadKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTFCantidadKeyTyped
         char letra = evt.getKeyChar();
@@ -562,22 +613,24 @@ public class jFVentas extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTextArea Detalle;
     private javax.swing.JButton Existencias;
     private javax.swing.JButton jBAgregar;
     private javax.swing.JButton jBCrear;
     private javax.swing.JComboBox jCBServicios;
-    private javax.swing.JTable jFVentas;
+    private com.toedter.calendar.JDateChooser jDCFecha;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JTable jTDetalles;
     private javax.swing.JTextField jTFCantidad;
     private javax.swing.JTextField jTFFactura;
     private javax.swing.JTable jTNuevos;
+    private javax.swing.JTable jTVentas;
     // End of variables declaration//GEN-END:variables
 }

@@ -3,9 +3,12 @@ C:\Users\USUARIO\Documents\GitHub\ProyectoClinica\ProyectoClinica\src\main\java\
 C:\Users\USUARIO\Documents\GitHub\ProyectoClinica\ProyectoClinica\src\main\java\Controladores\ServicioJpaController.java
 C:\Users\USUARIO\Documents\GitHub\ProyectoClinica\ProyectoClinica\src\main\java\Controladores\LibroCompraVentaJpaController.java
 C:\Users\USUARIO\Documents\GitHub\ProyectoClinica\ProyectoClinica\src\main\java\Entidades\LibroCompraVenta.java
+C:\Users\USUARIO\Documents\GitHub\ProyectoClinica\ProyectoClinica\src\main\java\ModuloVentas\ModeloTablaVentas.java
 C:\Users\USUARIO\Documents\GitHub\ProyectoClinica\ProyectoClinica\src\main\java\Entidades\Compra.java
+C:\Users\USUARIO\Documents\GitHub\ProyectoClinica\ProyectoClinica\src\main\java\ModuloVentas\ACModeloTabla.java
 C:\Users\USUARIO\Documents\GitHub\ProyectoClinica\ProyectoClinica\src\main\java\Controladores\exceptions\IllegalOrphanException.java
 C:\Users\USUARIO\Documents\GitHub\ProyectoClinica\ProyectoClinica\src\main\java\Entidades\Historial.java
+C:\Users\USUARIO\Documents\GitHub\ProyectoClinica\ProyectoClinica\src\main\java\ModuloVentas\ModeloTablaDetalles.java
 C:\Users\USUARIO\Documents\GitHub\ProyectoClinica\ProyectoClinica\src\main\java\Entidades\Empleados.java
 C:\Users\USUARIO\Documents\GitHub\ProyectoClinica\ProyectoClinica\src\main\java\Controladores\CompraJpaController.java
 C:\Users\USUARIO\Documents\GitHub\ProyectoClinica\ProyectoClinica\src\main\java\Controladores\EmpleadosJpaController.java

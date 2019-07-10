@@ -9,6 +9,7 @@ Controladores\VentasJpaController.class
 ModuloVentas\jFVentas$4.class
 Entidades\Producto_.class
 Singleton\EntityM.class
+ModuloVentas\ModeloTablaDetalles$1.class
 Entidades\Historial_.class
 ModuloVentas\jFVentas$2.class
 Controladores\SaldoextraJpaController.class
@@ -19,12 +20,15 @@ Entidades\LibroCompraVenta.class
 Entidades\Compra.class
 ModuloVentas\jFVentas$5.class
 Controladores\DetalleventaJpaController.class
+ModuloVentas\ACModeloTabla.class
 Main\Main.class
 ModuloVentas\jFVentas$10.class
 ModuloVentas\jFVentas$8.class
 Entidades\Empleados_.class
 Entidades\Telefonos_.class
+ModuloVentas\ModeloTablaDetalles.class
 Controladores\ServicioJpaController.class
+ModuloVentas\ModeloTablaVentas$1.class
 ModuloVentas\jFVentas$3.class
 Controladores\exceptions\PreexistingEntityException.class
 Entidades\Ventas_.class
@@ -36,6 +40,7 @@ Entidades\LibroCompraVenta_.class
 Controladores\exceptions\NonexistentEntityException.class
 Controladores\DetallecompraJpaController.class
 Entidades\Saldoextra_.class
+ModuloVentas\ModeloTablaVentas.class
 Entidades\Compra_.class
 Entidades\Telefonos.class
 Entidades\Detalleventa.class
