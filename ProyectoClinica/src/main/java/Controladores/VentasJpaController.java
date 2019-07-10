@@ -223,6 +223,7 @@ public class VentasJpaController implements Serializable {
             em.close();
         }
     }
+    
     public void updateTotal(Ventas ventas){
         EntityManager em = null;
         try{
