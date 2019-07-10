@@ -5,7 +5,6 @@
  */
 package Controladores;
 
-import Controladores.exceptions.IllegalOrphanException;
 import Controladores.exceptions.NonexistentEntityException;
 import java.io.Serializable;
 import javax.persistence.Query;
@@ -19,16 +18,15 @@ import Entidades.Telefono;
 import Entidades.Tutorpaciente;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 
 /**
  *
- * @author oem
+ * @author nasc_
  */
 public class TutorpacienteJpaController implements Serializable {
 
-    public TutorpacienteJpaController() {
-        this.emf = Persistence.createEntityManagerFactory("Clinica");
+    public TutorpacienteJpaController(EntityManagerFactory emf) {
+        this.emf = emf;
     }
     private EntityManagerFactory emf = null;
 
@@ -86,7 +84,7 @@ public class TutorpacienteJpaController implements Serializable {
         }
     }
 
-    public void edit(Tutorpaciente tutorpaciente) throws IllegalOrphanException, NonexistentEntityException, Exception {
+    public void edit(Tutorpaciente tutorpaciente) throws NonexistentEntityException, Exception {
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -96,18 +94,6 @@ public class TutorpacienteJpaController implements Serializable {
             List<Paciente> pacienteListNew = tutorpaciente.getPacienteList();
             List<Telefono> telefonoListOld = persistentTutorpaciente.getTelefonoList();
             List<Telefono> telefonoListNew = tutorpaciente.getTelefonoList();
-            List<String> illegalOrphanMessages = null;
-            for (Paciente pacienteListOldPaciente : pacienteListOld) {
-                if (!pacienteListNew.contains(pacienteListOldPaciente)) {
-                    if (illegalOrphanMessages == null) {
-                        illegalOrphanMessages = new ArrayList<String>();
-                    }
-                    illegalOrphanMessages.add("You must retain Paciente " + pacienteListOldPaciente + " since its tutorPacienteid field is not nullable.");
-                }
-            }
-            if (illegalOrphanMessages != null) {
-                throw new IllegalOrphanException(illegalOrphanMessages);
-            }
             List<Paciente> attachedPacienteListNew = new ArrayList<Paciente>();
             for (Paciente pacienteListNewPacienteToAttach : pacienteListNew) {
                 pacienteListNewPacienteToAttach = em.getReference(pacienteListNewPacienteToAttach.getClass(), pacienteListNewPacienteToAttach.getId());
@@ -123,6 +109,12 @@ public class TutorpacienteJpaController implements Serializable {
             telefonoListNew = attachedTelefonoListNew;
             tutorpaciente.setTelefonoList(telefonoListNew);
             tutorpaciente = em.merge(tutorpaciente);
+            for (Paciente pacienteListOldPaciente : pacienteListOld) {
+                if (!pacienteListNew.contains(pacienteListOldPaciente)) {
+                    pacienteListOldPaciente.setTutorPacienteid(null);
+                    pacienteListOldPaciente = em.merge(pacienteListOldPaciente);
+                }
+            }
             for (Paciente pacienteListNewPaciente : pacienteListNew) {
                 if (!pacienteListOld.contains(pacienteListNewPaciente)) {
                     Tutorpaciente oldTutorPacienteidOfPacienteListNewPaciente = pacienteListNewPaciente.getTutorPacienteid();
@@ -168,7 +160,7 @@ public class TutorpacienteJpaController implements Serializable {
         }
     }
 
-    public void destroy(Integer id) throws IllegalOrphanException, NonexistentEntityException {
+    public void destroy(Integer id) throws NonexistentEntityException {
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -180,16 +172,10 @@ public class TutorpacienteJpaController implements Serializable {
             } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The tutorpaciente with id " + id + " no longer exists.", enfe);
             }
-            List<String> illegalOrphanMessages = null;
-            List<Paciente> pacienteListOrphanCheck = tutorpaciente.getPacienteList();
-            for (Paciente pacienteListOrphanCheckPaciente : pacienteListOrphanCheck) {
-                if (illegalOrphanMessages == null) {
-                    illegalOrphanMessages = new ArrayList<String>();
-                }
-                illegalOrphanMessages.add("This Tutorpaciente (" + tutorpaciente + ") cannot be destroyed since the Paciente " + pacienteListOrphanCheckPaciente + " in its pacienteList field has a non-nullable tutorPacienteid field.");
-            }
-            if (illegalOrphanMessages != null) {
-                throw new IllegalOrphanException(illegalOrphanMessages);
+            List<Paciente> pacienteList = tutorpaciente.getPacienteList();
+            for (Paciente pacienteListPaciente : pacienteList) {
+                pacienteListPaciente.setTutorPacienteid(null);
+                pacienteListPaciente = em.merge(pacienteListPaciente);
             }
             List<Telefono> telefonoList = tutorpaciente.getTelefonoList();
             for (Telefono telefonoListTelefono : telefonoList) {
@@ -250,7 +236,6 @@ public class TutorpacienteJpaController implements Serializable {
             em.close();
         }
     }
-
     public void actualizarTutor(String nombre, String direccion, String telefono, int id){
         EntityManager em = null;
         try{

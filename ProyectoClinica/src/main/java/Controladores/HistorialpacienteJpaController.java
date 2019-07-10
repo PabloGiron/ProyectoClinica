@@ -12,7 +12,6 @@ import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import Entidades.Paciente;
 import Entidades.Citaortodoncia;
 import java.util.ArrayList;
 import java.util.List;
@@ -47,11 +46,6 @@ public class HistorialpacienteJpaController implements Serializable {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            Paciente pacienteid = historialpaciente.getPacienteid();
-            if (pacienteid != null) {
-                pacienteid = em.getReference(pacienteid.getClass(), pacienteid.getId());
-                historialpaciente.setPacienteid(pacienteid);
-            }
             List<Citaortodoncia> attachedCitaortodonciaList = new ArrayList<Citaortodoncia>();
             for (Citaortodoncia citaortodonciaListCitaortodonciaToAttach : historialpaciente.getCitaortodonciaList()) {
                 citaortodonciaListCitaortodonciaToAttach = em.getReference(citaortodonciaListCitaortodonciaToAttach.getClass(), citaortodonciaListCitaortodonciaToAttach.getIdCitaOrtodoncia());
@@ -65,10 +59,6 @@ public class HistorialpacienteJpaController implements Serializable {
             }
             historialpaciente.setCitanormalList(attachedCitanormalList);
             em.persist(historialpaciente);
-            if (pacienteid != null) {
-                pacienteid.getHistorialpacienteList().add(historialpaciente);
-                pacienteid = em.merge(pacienteid);
-            }
             for (Citaortodoncia citaortodonciaListCitaortodoncia : historialpaciente.getCitaortodonciaList()) {
                 Historialpaciente oldHistorialPacienteidHistorialPacienteOfCitaortodonciaListCitaortodoncia = citaortodonciaListCitaortodoncia.getHistorialPacienteidHistorialPaciente();
                 citaortodonciaListCitaortodoncia.setHistorialPacienteidHistorialPaciente(historialpaciente);
@@ -101,8 +91,6 @@ public class HistorialpacienteJpaController implements Serializable {
             em = getEntityManager();
             em.getTransaction().begin();
             Historialpaciente persistentHistorialpaciente = em.find(Historialpaciente.class, historialpaciente.getIdHistorialPaciente());
-            Paciente pacienteidOld = persistentHistorialpaciente.getPacienteid();
-            Paciente pacienteidNew = historialpaciente.getPacienteid();
             List<Citaortodoncia> citaortodonciaListOld = persistentHistorialpaciente.getCitaortodonciaList();
             List<Citaortodoncia> citaortodonciaListNew = historialpaciente.getCitaortodonciaList();
             List<Citanormal> citanormalListOld = persistentHistorialpaciente.getCitanormalList();
@@ -127,10 +115,6 @@ public class HistorialpacienteJpaController implements Serializable {
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);
             }
-            if (pacienteidNew != null) {
-                pacienteidNew = em.getReference(pacienteidNew.getClass(), pacienteidNew.getId());
-                historialpaciente.setPacienteid(pacienteidNew);
-            }
             List<Citaortodoncia> attachedCitaortodonciaListNew = new ArrayList<Citaortodoncia>();
             for (Citaortodoncia citaortodonciaListNewCitaortodonciaToAttach : citaortodonciaListNew) {
                 citaortodonciaListNewCitaortodonciaToAttach = em.getReference(citaortodonciaListNewCitaortodonciaToAttach.getClass(), citaortodonciaListNewCitaortodonciaToAttach.getIdCitaOrtodoncia());
@@ -146,14 +130,6 @@ public class HistorialpacienteJpaController implements Serializable {
             citanormalListNew = attachedCitanormalListNew;
             historialpaciente.setCitanormalList(citanormalListNew);
             historialpaciente = em.merge(historialpaciente);
-            if (pacienteidOld != null && !pacienteidOld.equals(pacienteidNew)) {
-                pacienteidOld.getHistorialpacienteList().remove(historialpaciente);
-                pacienteidOld = em.merge(pacienteidOld);
-            }
-            if (pacienteidNew != null && !pacienteidNew.equals(pacienteidOld)) {
-                pacienteidNew.getHistorialpacienteList().add(historialpaciente);
-                pacienteidNew = em.merge(pacienteidNew);
-            }
             for (Citaortodoncia citaortodonciaListNewCitaortodoncia : citaortodonciaListNew) {
                 if (!citaortodonciaListOld.contains(citaortodonciaListNewCitaortodoncia)) {
                     Historialpaciente oldHistorialPacienteidHistorialPacienteOfCitaortodonciaListNewCitaortodoncia = citaortodonciaListNewCitaortodoncia.getHistorialPacienteidHistorialPaciente();
@@ -222,11 +198,6 @@ public class HistorialpacienteJpaController implements Serializable {
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);
-            }
-            Paciente pacienteid = historialpaciente.getPacienteid();
-            if (pacienteid != null) {
-                pacienteid.getHistorialpacienteList().remove(historialpaciente);
-                pacienteid = em.merge(pacienteid);
             }
             em.remove(historialpaciente);
             em.getTransaction().commit();

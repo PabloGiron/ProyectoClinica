@@ -13,21 +13,18 @@ import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import Entidades.Tutorpaciente;
-import Entidades.Telefono;
-import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 
 /**
  *
- * @author oem
+ * @author nasc_
  */
 public class PacienteJpaController implements Serializable {
 
-    public PacienteJpaController( ) {
-        this.emf = Persistence.createEntityManagerFactory("Clinica");
+    public PacienteJpaController(EntityManagerFactory emf) {
+        this.emf = emf;
     }
     private EntityManagerFactory emf = null;
 
@@ -36,9 +33,6 @@ public class PacienteJpaController implements Serializable {
     }
 
     public void create(Paciente paciente) {
-        if (paciente.getTelefonoList() == null) {
-            paciente.setTelefonoList(new ArrayList<Telefono>());
-        }
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -48,25 +42,10 @@ public class PacienteJpaController implements Serializable {
                 tutorPacienteid = em.getReference(tutorPacienteid.getClass(), tutorPacienteid.getId());
                 paciente.setTutorPacienteid(tutorPacienteid);
             }
-            List<Telefono> attachedTelefonoList = new ArrayList<Telefono>();
-            for (Telefono telefonoListTelefonoToAttach : paciente.getTelefonoList()) {
-                telefonoListTelefonoToAttach = em.getReference(telefonoListTelefonoToAttach.getClass(), telefonoListTelefonoToAttach.getId());
-                attachedTelefonoList.add(telefonoListTelefonoToAttach);
-            }
-            paciente.setTelefonoList(attachedTelefonoList);
             em.persist(paciente);
             if (tutorPacienteid != null) {
                 tutorPacienteid.getPacienteList().add(paciente);
                 tutorPacienteid = em.merge(tutorPacienteid);
-            }
-            for (Telefono telefonoListTelefono : paciente.getTelefonoList()) {
-                Paciente oldPacienteidOfTelefonoListTelefono = telefonoListTelefono.getPacienteid();
-                telefonoListTelefono.setPacienteid(paciente);
-                telefonoListTelefono = em.merge(telefonoListTelefono);
-                if (oldPacienteidOfTelefonoListTelefono != null) {
-                    oldPacienteidOfTelefonoListTelefono.getTelefonoList().remove(telefonoListTelefono);
-                    oldPacienteidOfTelefonoListTelefono = em.merge(oldPacienteidOfTelefonoListTelefono);
-                }
             }
             em.getTransaction().commit();
         } finally {
@@ -84,19 +63,10 @@ public class PacienteJpaController implements Serializable {
             Paciente persistentPaciente = em.find(Paciente.class, paciente.getId());
             Tutorpaciente tutorPacienteidOld = persistentPaciente.getTutorPacienteid();
             Tutorpaciente tutorPacienteidNew = paciente.getTutorPacienteid();
-            List<Telefono> telefonoListOld = persistentPaciente.getTelefonoList();
-            List<Telefono> telefonoListNew = paciente.getTelefonoList();
             if (tutorPacienteidNew != null) {
                 tutorPacienteidNew = em.getReference(tutorPacienteidNew.getClass(), tutorPacienteidNew.getId());
                 paciente.setTutorPacienteid(tutorPacienteidNew);
             }
-            List<Telefono> attachedTelefonoListNew = new ArrayList<Telefono>();
-            for (Telefono telefonoListNewTelefonoToAttach : telefonoListNew) {
-                telefonoListNewTelefonoToAttach = em.getReference(telefonoListNewTelefonoToAttach.getClass(), telefonoListNewTelefonoToAttach.getId());
-                attachedTelefonoListNew.add(telefonoListNewTelefonoToAttach);
-            }
-            telefonoListNew = attachedTelefonoListNew;
-            paciente.setTelefonoList(telefonoListNew);
             paciente = em.merge(paciente);
             if (tutorPacienteidOld != null && !tutorPacienteidOld.equals(tutorPacienteidNew)) {
                 tutorPacienteidOld.getPacienteList().remove(paciente);
@@ -105,23 +75,6 @@ public class PacienteJpaController implements Serializable {
             if (tutorPacienteidNew != null && !tutorPacienteidNew.equals(tutorPacienteidOld)) {
                 tutorPacienteidNew.getPacienteList().add(paciente);
                 tutorPacienteidNew = em.merge(tutorPacienteidNew);
-            }
-            for (Telefono telefonoListOldTelefono : telefonoListOld) {
-                if (!telefonoListNew.contains(telefonoListOldTelefono)) {
-                    telefonoListOldTelefono.setPacienteid(null);
-                    telefonoListOldTelefono = em.merge(telefonoListOldTelefono);
-                }
-            }
-            for (Telefono telefonoListNewTelefono : telefonoListNew) {
-                if (!telefonoListOld.contains(telefonoListNewTelefono)) {
-                    Paciente oldPacienteidOfTelefonoListNewTelefono = telefonoListNewTelefono.getPacienteid();
-                    telefonoListNewTelefono.setPacienteid(paciente);
-                    telefonoListNewTelefono = em.merge(telefonoListNewTelefono);
-                    if (oldPacienteidOfTelefonoListNewTelefono != null && !oldPacienteidOfTelefonoListNewTelefono.equals(paciente)) {
-                        oldPacienteidOfTelefonoListNewTelefono.getTelefonoList().remove(telefonoListNewTelefono);
-                        oldPacienteidOfTelefonoListNewTelefono = em.merge(oldPacienteidOfTelefonoListNewTelefono);
-                    }
-                }
             }
             em.getTransaction().commit();
         } catch (Exception ex) {
@@ -156,11 +109,6 @@ public class PacienteJpaController implements Serializable {
             if (tutorPacienteid != null) {
                 tutorPacienteid.getPacienteList().remove(paciente);
                 tutorPacienteid = em.merge(tutorPacienteid);
-            }
-            List<Telefono> telefonoList = paciente.getTelefonoList();
-            for (Telefono telefonoListTelefono : telefonoList) {
-                telefonoListTelefono.setPacienteid(null);
-                telefonoListTelefono = em.merge(telefonoListTelefono);
             }
             em.remove(paciente);
             em.getTransaction().commit();
@@ -216,7 +164,7 @@ public class PacienteJpaController implements Serializable {
             em.close();
         }
     }
-        public void actualizarPaciente(String nombre, String edad, String direccion, String nit, String telefono, int id){
+    public void actualizarPaciente(String nombre, String edad, String direccion, String nit, String telefono, int id){
         EntityManager em = null;
         try{
             em = getEntityManager();

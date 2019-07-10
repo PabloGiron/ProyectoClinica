@@ -31,8 +31,8 @@ public class CrearTutor extends javax.swing.JFrame {
         llenarTabla();
         cargarDatos();
     }
-    TutorpacienteJpaController controladorTutor = new TutorpacienteJpaController();
-    TelefonoJpaController controladorTelefono = new TelefonoJpaController();
+    TutorpacienteJpaController controladorTutor = new TutorpacienteJpaController(EntityM.getEmf());
+    TelefonoJpaController controladorTelefono = new TelefonoJpaController(EntityM.getEmf());
     DefaultTableModel rellenarTabla;
     Tutorpaciente tutorEditar;
     Telefono telefonoEditar;
