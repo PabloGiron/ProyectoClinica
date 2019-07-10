@@ -20,15 +20,15 @@ import javax.persistence.Table;
 
 /**
  *
- * @author nasc_
+ * @author oem
  */
 @Entity
-@Table(name = "telefonos")
+@Table(name = "telefono")
 @NamedQueries({
-    @NamedQuery(name = "Telefonos.findAll", query = "SELECT t FROM Telefonos t"),
-    @NamedQuery(name = "Telefonos.findById", query = "SELECT t FROM Telefonos t WHERE t.id = :id"),
-    @NamedQuery(name = "Telefonos.findByNumero", query = "SELECT t FROM Telefonos t WHERE t.numero = :numero")})
-public class Telefonos implements Serializable {
+    @NamedQuery(name = "Telefono.findAll", query = "SELECT t FROM Telefono t"),
+    @NamedQuery(name = "Telefono.findById", query = "SELECT t FROM Telefono t WHERE t.id = :id"),
+    @NamedQuery(name = "Telefono.findByNumero", query = "SELECT t FROM Telefono t WHERE t.numero = :numero")})
+public class Telefono implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -38,14 +38,20 @@ public class Telefonos implements Serializable {
     private Integer id;
     @Column(name = "Numero")
     private String numero;
+    @JoinColumn(name = "Paciente_id", referencedColumnName = "id")
+    @ManyToOne
+    private Paciente pacienteid;
+    @JoinColumn(name = "TutorPaciente_id", referencedColumnName = "id")
+    @ManyToOne
+    private Tutorpaciente tutorPacienteid;
     @JoinColumn(name = "Empleados_id", referencedColumnName = "id")
-    @ManyToOne(optional = false)
+    @ManyToOne
     private Empleados empleadosid;
 
-    public Telefonos() {
+    public Telefono() {
     }
 
-    public Telefonos(Integer id) {
+    public Telefono(Integer id) {
         this.id = id;
     }
 
@@ -63,6 +69,22 @@ public class Telefonos implements Serializable {
 
     public void setNumero(String numero) {
         this.numero = numero;
+    }
+
+    public Paciente getPacienteid() {
+        return pacienteid;
+    }
+
+    public void setPacienteid(Paciente pacienteid) {
+        this.pacienteid = pacienteid;
+    }
+
+    public Tutorpaciente getTutorPacienteid() {
+        return tutorPacienteid;
+    }
+
+    public void setTutorPacienteid(Tutorpaciente tutorPacienteid) {
+        this.tutorPacienteid = tutorPacienteid;
     }
 
     public Empleados getEmpleadosid() {
@@ -83,10 +105,10 @@ public class Telefonos implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Telefonos)) {
+        if (!(object instanceof Telefono)) {
             return false;
         }
-        Telefonos other = (Telefonos) object;
+        Telefono other = (Telefono) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -95,7 +117,7 @@ public class Telefonos implements Serializable {
 
     @Override
     public String toString() {
-        return "Entidades.Telefonos[ id=" + id + " ]";
+        return "Entidades.Telefono[ id=" + id + " ]";
     }
     
 }

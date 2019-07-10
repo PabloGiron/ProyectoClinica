@@ -9,7 +9,6 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -24,7 +23,7 @@ import javax.persistence.TemporalType;
 
 /**
  *
- * @author nasc_
+ * @author oem
  */
 @Entity
 @Table(name = "empleados")
@@ -69,12 +68,8 @@ public class Empleados implements Serializable {
     @Column(name = "Fecha_de_ingreso")
     @Temporal(TemporalType.DATE)
     private Date fechadeingreso;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "empleadosid")
-    private List<Historial> historialList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "empleadosid")
-    private List<Telefonos> telefonosList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "empleadosid")
-    private List<Saldoextra> saldoextraList;
+    @OneToMany(mappedBy = "empleadosid")
+    private List<Telefono> telefonoList;
 
     public Empleados() {
     }
@@ -163,28 +158,12 @@ public class Empleados implements Serializable {
         this.fechadeingreso = fechadeingreso;
     }
 
-    public List<Historial> getHistorialList() {
-        return historialList;
+    public List<Telefono> getTelefonoList() {
+        return telefonoList;
     }
 
-    public void setHistorialList(List<Historial> historialList) {
-        this.historialList = historialList;
-    }
-
-    public List<Telefonos> getTelefonosList() {
-        return telefonosList;
-    }
-
-    public void setTelefonosList(List<Telefonos> telefonosList) {
-        this.telefonosList = telefonosList;
-    }
-
-    public List<Saldoextra> getSaldoextraList() {
-        return saldoextraList;
-    }
-
-    public void setSaldoextraList(List<Saldoextra> saldoextraList) {
-        this.saldoextraList = saldoextraList;
+    public void setTelefonoList(List<Telefono> telefonoList) {
+        this.telefonoList = telefonoList;
     }
 
     @Override
