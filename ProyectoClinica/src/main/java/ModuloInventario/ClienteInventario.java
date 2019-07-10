@@ -101,12 +101,29 @@ public class ClienteInventario extends javax.swing.JFrame {
                 }else if (listaPedido.get(i).getTipo2().equals("6")){
                     rellenarTabla.setValueAt("Prótesis removibles parcial", i, 5);
                 }else {rellenarTabla.setValueAt("---------", i, 5);}
-                //rellenarTabla.setValueAt(listaPedido.get(i).getTipo1(), i, 4);
-                //rellenarTabla.setValueAt(listaPedido.get(i).getTipo2(), i, 5);
             }
         }catch (Exception e){
             JOptionPane.showMessageDialog(null, e.getMessage());
         }
+    }
+    
+    public void filtroNombre(){
+        llenarTabla();
+        int posicion = 0;
+        Object o[] = null;
+        Query query = em.createNativeQuery("SELECT * FROM Producto WHERE producto.Nombre LIKE '%"+txtBusqueda.getText()+"%';");
+        List<Object[]> listaDatos = query.getResultList();
+        rellenarTabla = (DefaultTableModel)tablaInventario.getModel();
+        for(Object[] lista : listaDatos){
+            rellenarTabla.addRow(o);
+            rellenarTabla.setValueAt(lista[0], posicion, 0);
+            rellenarTabla.setValueAt(lista[1], posicion, 1);
+            rellenarTabla.setValueAt(lista[2], posicion, 2);
+            rellenarTabla.setValueAt(lista[3], posicion, 3);
+            rellenarTabla.setValueAt(lista[4], posicion, 4);
+            rellenarTabla.setValueAt(lista[5], posicion, 5);
+            posicion++;
+        }       
     }
 
     /**
@@ -387,7 +404,7 @@ public class ClienteInventario extends javax.swing.JFrame {
                 producto.setPrecio(Float.parseFloat(txtCantidad.getText()));
                 producto.setTipo1(Integer.toString(cmbTipo.getSelectedIndex() + 1));
                 producto.setTipo2(Integer.toString(cmbTipo2.getSelectedIndex() + 1));
-                controladorInventario.create(producto);
+                controladorInventario.crear(producto);
                 llenarTabla();
                 cargarDatos();
                 JOptionPane.showMessageDialog(null,"Se ha creado un nuevo registro.");
@@ -410,7 +427,7 @@ public class ClienteInventario extends javax.swing.JFrame {
             productoEditar.setPrecio(Float.parseFloat(txtPrecio.getText()));
             productoEditar.setTipo1(Integer.toString(cmbTipo.getSelectedIndex() + 1));
             productoEditar.setTipo2(Integer.toString(cmbTipo2.getSelectedIndex() + 1));
-            controladorInventario.edit(productoEditar);
+            controladorInventario.editar(productoEditar);
             llenarTabla();
             cargarDatos();
        //    controladorInventario.edit(productoEditar);
@@ -427,7 +444,7 @@ public class ClienteInventario extends javax.swing.JFrame {
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
         // TODO add your handling code here:
          try {
-            controladorInventario.destroy((int) tablaInventario.getValueAt(tablaInventario.getSelectedRow(), 0));
+            controladorInventario.eliminar((int) tablaInventario.getValueAt(tablaInventario.getSelectedRow(), 0));
             llenarTabla();
             cargarDatos();
             this.txtPrecio.setText("");
@@ -441,23 +458,7 @@ public class ClienteInventario extends javax.swing.JFrame {
 
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
         // TODO add your handling code here:4
-        llenarTabla();
-        int posicion = 0;
-        Object o[] = null;
-        Query query = em.createNativeQuery("SELECT * FROM Producto WHERE producto.Nombre LIKE '%"+txtBusqueda.getText()+"%';");
-        //query.setParameter(1, 1);
-        List<Object[]> listaDatos = query.getResultList();
-        rellenarTabla = (DefaultTableModel)tablaInventario.getModel();
-        for(Object[] lista : listaDatos){
-            rellenarTabla.addRow(o);
-            rellenarTabla.setValueAt(lista[0], posicion, 0);
-            rellenarTabla.setValueAt(lista[1], posicion, 1);
-            rellenarTabla.setValueAt(lista[2], posicion, 2);
-            rellenarTabla.setValueAt(lista[3], posicion, 3);
-            rellenarTabla.setValueAt(lista[4], posicion, 4);
-            rellenarTabla.setValueAt(lista[5], posicion, 5);
-            posicion++;
-        }       
+        filtroNombre();
         //posicion=0;
     }//GEN-LAST:event_btnBuscarActionPerformed
 
