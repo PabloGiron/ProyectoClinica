@@ -216,5 +216,19 @@ public class PacienteJpaController implements Serializable {
             em.close();
         }
     }
-    
+        public void actualizarPaciente(String nombre, String edad, String direccion, String nit, String telefono, int id){
+        EntityManager em = null;
+        try{
+            em = getEntityManager();
+            em.getTransaction().begin();
+            Query queryUpdate = em.createNativeQuery("UPDATE paciente INNER JOIN telefono ON paciente.id = telefono.Paciente_id SET paciente.Nombre = '"+nombre+"', paciente.Edad = '"+edad+"',paciente.Direccion = '"+direccion+"', paciente.Nit = '"+ nit +"', telefono.Numero = '"+telefono+"' WHERE paciente.id = "+id+";");
+            queryUpdate.executeUpdate();
+            em.getTransaction().commit();
+        }finally {
+            if (em != null) {
+                em.close();
+            }
+        }
+        
+    }
 }
