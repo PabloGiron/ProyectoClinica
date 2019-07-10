@@ -395,7 +395,7 @@ public class ClienteInventario extends javax.swing.JFrame {
 
     private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
         // TODO add your handling code here:
-                if(txtNombre.getText().equals("") || txtPrecio.getText().equals("") || txtCantidad.getText().equals("") ){
+        if(txtNombre.getText().equals("") || txtPrecio.getText().equals("") || txtCantidad.getText().equals("") ){
             JOptionPane.showMessageDialog(null,"Error: Uno de los campos se encuentran vacíos.");
         }else{
             try{

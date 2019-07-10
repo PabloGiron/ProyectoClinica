@@ -19,6 +19,7 @@ import Entidades.Telefono;
 import Entidades.Tutorpaciente;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 
 /**
  *
@@ -26,8 +27,8 @@ import javax.persistence.EntityManagerFactory;
  */
 public class TutorpacienteJpaController implements Serializable {
 
-    public TutorpacienteJpaController(EntityManagerFactory emf) {
-        this.emf = emf;
+    public TutorpacienteJpaController() {
+        this.emf = Persistence.createEntityManagerFactory("Clinica");
     }
     private EntityManagerFactory emf = null;
 
@@ -249,5 +250,20 @@ public class TutorpacienteJpaController implements Serializable {
             em.close();
         }
     }
-    
+
+    public void actualizarTutor(String nombre, String direccion, String telefono, int id){
+        EntityManager em = null;
+        try{
+            em = getEntityManager();
+            em.getTransaction().begin();
+            Query queryUpdate = em.createNativeQuery("UPDATE tutorpaciente INNER JOIN telefono ON tutorpaciente.id = telefono.TutorPaciente_id SET tutorpaciente.Nombre = '"+nombre+"', tutorpaciente.Direccion = '"+direccion+"', telefono.Numero = '"+telefono+"' WHERE tutorpaciente.id = "+id+" ;");
+            queryUpdate.executeUpdate();
+            em.getTransaction().commit();
+        }finally {
+            if (em != null) {
+                em.close();
+            }
+        }
+        
+    }
 }

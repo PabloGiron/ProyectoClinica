@@ -7,7 +7,7 @@ package Main;
 
 import ModuloInventario.ClienteInventario;
 import ModuloInventario.InventarioPrincipal;
-
+import ModuloVentas.jFVentas;
 /**
  *
  * @author oem
@@ -61,6 +61,11 @@ public class Cliente extends javax.swing.JFrame {
 
         jMenu1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Ventas.png"))); // NOI18N
         jMenu1.setText("Ventas");
+        jMenu1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                jMenu1MousePressed(evt);
+            }
+        });
         jMenuBar1.add(jMenu1);
 
         jMenu3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/RH.png"))); // NOI18N
@@ -106,6 +111,13 @@ public class Cliente extends javax.swing.JFrame {
         inventario.setVisible(true);
         this.dispose();*/
     }//GEN-LAST:event_jMenu2ActionPerformed
+
+    private void jMenu1MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenu1MousePressed
+        // TODO add your handling code here:
+        jFVentas ventas = new jFVentas();
+        ventas.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_jMenu1MousePressed
 
     /**
      * @param args the command line arguments
