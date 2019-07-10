@@ -6,9 +6,7 @@
 package Entidades;
 
 import java.io.Serializable;
-import java.util.List;
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -18,12 +16,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
  *
- * @author oem
+ * @author nasc_
  */
 @Entity
 @Table(name = "paciente")
@@ -35,9 +32,6 @@ import javax.persistence.Table;
     @NamedQuery(name = "Paciente.findByNit", query = "SELECT p FROM Paciente p WHERE p.nit = :nit"),
     @NamedQuery(name = "Paciente.findByDireccion", query = "SELECT p FROM Paciente p WHERE p.direccion = :direccion")})
 public class Paciente implements Serializable {
-
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "pacienteid")
-    private List<Historialpaciente> historialpacienteList;
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -54,10 +48,8 @@ public class Paciente implements Serializable {
     @Column(name = "Direccion")
     private String direccion;
     @JoinColumn(name = "TutorPaciente_id", referencedColumnName = "id")
-    @ManyToOne(optional = false)
+    @ManyToOne
     private Tutorpaciente tutorPacienteid;
-    @OneToMany(mappedBy = "pacienteid")
-    private List<Telefono> telefonoList;
 
     public Paciente() {
     }
@@ -114,14 +106,6 @@ public class Paciente implements Serializable {
         this.tutorPacienteid = tutorPacienteid;
     }
 
-    public List<Telefono> getTelefonoList() {
-        return telefonoList;
-    }
-
-    public void setTelefonoList(List<Telefono> telefonoList) {
-        this.telefonoList = telefonoList;
-    }
-
     @Override
     public int hashCode() {
         int hash = 0;
@@ -145,14 +129,6 @@ public class Paciente implements Serializable {
     @Override
     public String toString() {
         return "Entidades.Paciente[ id=" + id + " ]";
-    }
-
-    public List<Historialpaciente> getHistorialpacienteList() {
-        return historialpacienteList;
-    }
-
-    public void setHistorialpacienteList(List<Historialpaciente> historialpacienteList) {
-        this.historialpacienteList = historialpacienteList;
     }
     
 }

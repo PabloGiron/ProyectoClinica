@@ -11,23 +11,21 @@ import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import Entidades.Paciente;
 import Entidades.Tutorpaciente;
 import Entidades.Empleados;
 import Entidades.Telefono;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 
 /**
  *
- * @author oem
+ * @author nasc_
  */
 public class TelefonoJpaController implements Serializable {
 
-    public TelefonoJpaController() {
-        this.emf = Persistence.createEntityManagerFactory("Clinica");
+    public TelefonoJpaController(EntityManagerFactory emf) {
+        this.emf = emf;
     }
     private EntityManagerFactory emf = null;
 
@@ -40,11 +38,6 @@ public class TelefonoJpaController implements Serializable {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            Paciente pacienteid = telefono.getPacienteid();
-            if (pacienteid != null) {
-                pacienteid = em.getReference(pacienteid.getClass(), pacienteid.getId());
-                telefono.setPacienteid(pacienteid);
-            }
             Tutorpaciente tutorPacienteid = telefono.getTutorPacienteid();
             if (tutorPacienteid != null) {
                 tutorPacienteid = em.getReference(tutorPacienteid.getClass(), tutorPacienteid.getId());
@@ -56,10 +49,6 @@ public class TelefonoJpaController implements Serializable {
                 telefono.setEmpleadosid(empleadosid);
             }
             em.persist(telefono);
-            if (pacienteid != null) {
-                pacienteid.getTelefonoList().add(telefono);
-                pacienteid = em.merge(pacienteid);
-            }
             if (tutorPacienteid != null) {
                 tutorPacienteid.getTelefonoList().add(telefono);
                 tutorPacienteid = em.merge(tutorPacienteid);
@@ -82,16 +71,10 @@ public class TelefonoJpaController implements Serializable {
             em = getEntityManager();
             em.getTransaction().begin();
             Telefono persistentTelefono = em.find(Telefono.class, telefono.getId());
-            Paciente pacienteidOld = persistentTelefono.getPacienteid();
-            Paciente pacienteidNew = telefono.getPacienteid();
             Tutorpaciente tutorPacienteidOld = persistentTelefono.getTutorPacienteid();
             Tutorpaciente tutorPacienteidNew = telefono.getTutorPacienteid();
             Empleados empleadosidOld = persistentTelefono.getEmpleadosid();
             Empleados empleadosidNew = telefono.getEmpleadosid();
-            if (pacienteidNew != null) {
-                pacienteidNew = em.getReference(pacienteidNew.getClass(), pacienteidNew.getId());
-                telefono.setPacienteid(pacienteidNew);
-            }
             if (tutorPacienteidNew != null) {
                 tutorPacienteidNew = em.getReference(tutorPacienteidNew.getClass(), tutorPacienteidNew.getId());
                 telefono.setTutorPacienteid(tutorPacienteidNew);
@@ -101,14 +84,6 @@ public class TelefonoJpaController implements Serializable {
                 telefono.setEmpleadosid(empleadosidNew);
             }
             telefono = em.merge(telefono);
-            if (pacienteidOld != null && !pacienteidOld.equals(pacienteidNew)) {
-                pacienteidOld.getTelefonoList().remove(telefono);
-                pacienteidOld = em.merge(pacienteidOld);
-            }
-            if (pacienteidNew != null && !pacienteidNew.equals(pacienteidOld)) {
-                pacienteidNew.getTelefonoList().add(telefono);
-                pacienteidNew = em.merge(pacienteidNew);
-            }
             if (tutorPacienteidOld != null && !tutorPacienteidOld.equals(tutorPacienteidNew)) {
                 tutorPacienteidOld.getTelefonoList().remove(telefono);
                 tutorPacienteidOld = em.merge(tutorPacienteidOld);
@@ -153,11 +128,6 @@ public class TelefonoJpaController implements Serializable {
                 telefono.getId();
             } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The telefono with id " + id + " no longer exists.", enfe);
-            }
-            Paciente pacienteid = telefono.getPacienteid();
-            if (pacienteid != null) {
-                pacienteid.getTelefonoList().remove(telefono);
-                pacienteid = em.merge(pacienteid);
             }
             Tutorpaciente tutorPacienteid = telefono.getTutorPacienteid();
             if (tutorPacienteid != null) {

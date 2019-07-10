@@ -29,8 +29,8 @@ public class CrearPacientes extends javax.swing.JFrame {
         llenarTabla();
         cargarDatos();
     }
-    PacienteJpaController controladorPaciente = new PacienteJpaController();
-    TelefonoJpaController controladorTelefono = new TelefonoJpaController();
+    PacienteJpaController controladorPaciente = new PacienteJpaController(EntityM.getEmf());
+    TelefonoJpaController controladorTelefono = new TelefonoJpaController(EntityM.getEmf());
     DefaultTableModel rellenarTabla;
     Paciente pacienteEditar;
     Telefono telefonoEditar;
