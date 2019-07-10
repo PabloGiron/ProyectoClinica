@@ -56,7 +56,7 @@ public class jTFServicio extends javax.swing.JFrame {
         }       
         posicion=0;
     }
-    public void limpiarServicios()
+    private void limpiarServicios()
     {
         try
         {
