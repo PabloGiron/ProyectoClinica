@@ -5,8 +5,10 @@
  */
 package Main;
 
+import ModuloCitas.jFCita;
 import ModuloInventario.ClienteInventario;
 import ModuloInventario.InventarioPrincipal;
+import ModuloPacientes.ClientePacientes;
 import ModuloVentas.jFVentas;
 /**
  *
@@ -70,6 +72,11 @@ public class Cliente extends javax.swing.JFrame {
 
         jMenu3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/RH.png"))); // NOI18N
         jMenu3.setText("Pacientes");
+        jMenu3.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                jMenu3MousePressed(evt);
+            }
+        });
         jMenuBar1.add(jMenu3);
 
         setJMenuBar(jMenuBar1);
@@ -118,6 +125,12 @@ public class Cliente extends javax.swing.JFrame {
         ventas.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jMenu1MousePressed
+
+    private void jMenu3MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenu3MousePressed
+        ClientePacientes clienteP = new ClientePacientes();
+        clienteP.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_jMenu3MousePressed
 
     /**
      * @param args the command line arguments
