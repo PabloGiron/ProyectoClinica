@@ -6,8 +6,10 @@ import Entidades.Citanormal;
 import Entidades.Citaortodoncia;
 import Entidades.Historialpaciente;
 import Entidades.Paciente;
+import Main.Cliente;
 import ModelosTablas.ModeloTablaContexto;
 import ModelosTablas.ModeloTablaPacientes;
+import ModuloPacientes.ClientePacientes;
 import Singleton.EntityM;
 import java.util.Date;
 import java.util.List;
@@ -28,6 +30,7 @@ public class jFCita extends javax.swing.JFrame {
     private Paciente pacienteC = null;
     public jFCita() {
         initComponents();
+        this.setLocationRelativeTo(null);
         setModeloTabla();
         cargarPacientes("n");
     }
@@ -146,7 +149,12 @@ public class jFCita extends javax.swing.JFrame {
         jLabel6 = new javax.swing.JLabel();
         jTFFiltro = new javax.swing.JTextField();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Cita"));
 
@@ -355,6 +363,12 @@ public class jFCita extends javax.swing.JFrame {
     private void jBAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBAgregarActionPerformed
         crearCita();
     }//GEN-LAST:event_jBAgregarActionPerformed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        ClientePacientes cliente = new ClientePacientes();
+        cliente.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_formWindowClosing
 
     /**
      * @param args the command line arguments

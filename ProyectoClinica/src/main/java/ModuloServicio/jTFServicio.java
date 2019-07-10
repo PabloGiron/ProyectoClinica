@@ -4,6 +4,7 @@ import Controladores.ServicioJpaController;
 import Entidades.Servicio;
 import ModelosTablas.ModeloTablaContexto;
 import ModelosTablas.ModeloTablaServicios;
+import ModuloVentas.jFVentas;
 import Singleton.EntityM;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -23,6 +24,7 @@ public class jTFServicio extends javax.swing.JFrame {
     private ServicioJpaController cServicio = new ServicioJpaController(EntityM.getEmf()); 
     public jTFServicio() {
         initComponents();
+        this.setLocationRelativeTo(null);
         setModeloTabla();
         cargarServicios();
     }
@@ -84,7 +86,12 @@ public class jTFServicio extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTServicio = new javax.swing.JTable();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Datos del nuevo servicio"));
 
@@ -194,6 +201,12 @@ public class jTFServicio extends javax.swing.JFrame {
             this.jTFNombre.setText("");
         }
     }//GEN-LAST:event_jBAgregarActionPerformed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        jFVentas ventas = new jFVentas();
+        ventas.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_formWindowClosing
 
     /**
      * @param args the command line arguments
