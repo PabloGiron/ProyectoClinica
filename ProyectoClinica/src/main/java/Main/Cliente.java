@@ -6,6 +6,7 @@
 package Main;
 
 import ModuloInventario.ClienteInventario;
+import ModuloInventario.InventarioPrincipal;
 
 /**
  *
@@ -18,6 +19,7 @@ public class Cliente extends javax.swing.JFrame {
      */
     public Cliente() {
         initComponents();
+        setLocationRelativeTo(null);
     }
 
     /**
@@ -48,6 +50,11 @@ public class Cliente extends javax.swing.JFrame {
         jMenu2.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 jMenu2MousePressed(evt);
+            }
+        });
+        jMenu2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenu2ActionPerformed(evt);
             }
         });
         jMenuBar1.add(jMenu2);
@@ -88,10 +95,17 @@ public class Cliente extends javax.swing.JFrame {
 
     private void jMenu2MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenu2MousePressed
         // TODO add your handling code here:
-        ClienteInventario inventario = new ClienteInventario();
+        InventarioPrincipal inventario = new InventarioPrincipal();
         inventario.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jMenu2MousePressed
+
+    private void jMenu2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenu2ActionPerformed
+        // TODO add your handling code here      
+        /*InventarioPrincipal inventario = new InventarioPrincipal();
+        inventario.setVisible(true);
+        this.dispose();*/
+    }//GEN-LAST:event_jMenu2ActionPerformed
 
     /**
      * @param args the command line arguments

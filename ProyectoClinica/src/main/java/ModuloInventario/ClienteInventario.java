@@ -22,6 +22,7 @@ public class ClienteInventario extends javax.swing.JFrame {
      */
     public ClienteInventario() {
         initComponents();
+        setLocationRelativeTo(null);
         llenarTabla();
         cargarDatos();
     }
@@ -65,7 +66,7 @@ public class ClienteInventario extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, e.toString() + "error2");
         }
     }
-        private void cargarDatos(){
+    private void cargarDatos(){
         try{
             Object o[] = null;
             List<Producto> listaPedido = controladorInventario.findProductoEntities();
@@ -212,7 +213,7 @@ public class ClienteInventario extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 15, Short.MAX_VALUE)
+                        .addGap(0, 21, Short.MAX_VALUE)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 361, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
