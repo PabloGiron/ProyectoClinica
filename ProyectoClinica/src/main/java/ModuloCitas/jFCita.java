@@ -1,9 +1,15 @@
 package ModuloCitas;
 
+import Controladores.CitanormalJpaController;
+import Controladores.CitaortodonciaJpaController;
+import Entidades.Citanormal;
+import Entidades.Citaortodoncia;
+import Entidades.Historialpaciente;
 import Entidades.Paciente;
 import ModelosTablas.ModeloTablaContexto;
 import ModelosTablas.ModeloTablaPacientes;
 import Singleton.EntityM;
+import java.util.Date;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
@@ -19,15 +25,55 @@ public class jFCita extends javax.swing.JFrame {
     private DefaultTableModel modeloTabla;
     private EntityManager em = EntityM.getEm();
     private ModeloTablaContexto modTC = null;
-    private Paciente paciente = null;
+    private Paciente pacienteC = null;
     public jFCita() {
         initComponents();
         setModeloTabla();
-        cargarPacientes("a");
+        cargarPacientes("n");
     }
     
     private void crearCita(){
-        
+        Query queryHistorial = em.createQuery("SELECT h FROM Paciente p INNER JOIN p.historialpacienteList h WHERE p.id = " + pacienteC.getId() + " ");
+        Historialpaciente historial = (Historialpaciente)queryHistorial.getSingleResult();
+        if(String.valueOf(jCBCita.getSelectedItem()).equals("Cita Ortodoncia")){
+            Citaortodoncia cita = new Citaortodoncia();
+            CitaortodonciaJpaController cCita = new CitaortodonciaJpaController(EntityM.getEmf());
+            if(jTFNombre.getText().equals("") || jTFPrecio.getText().equals("") ){
+            JOptionPane.showMessageDialog(null,"Error: Uno de los campos se encuentran vacíos.");
+            }
+            else if(Integer.parseInt(jTFPrecio.getText()) < 1){
+                JOptionPane.showMessageDialog(null,"Error: El precio debe ser mayor a 0.");
+            }
+            else{
+                short pagado;
+                if(jCheckPagado.isSelected()){
+                    pagado = 1;
+                }else{
+                    pagado = 0;
+                }
+                
+                cita.setPrecio(Float.parseFloat(jTFPrecio.getText()));
+                cita.setDescripcion(jTADescripcion.getText());
+                cita.setFecha(new Date());
+                cita.setPagado(pagado);
+                cita.setHistorialPacienteidHistorialPaciente(historial);
+                cCita.create(cita);
+                
+            }
+        }else if(String.valueOf(jCBCita.getSelectedItem()).equals("Cita Ortodoncia")){
+            Citanormal cita = new Citanormal();
+            CitanormalJpaController cCita = new CitanormalJpaController(EntityM.getEmf());
+            cita.setDescripcion(jTADescripcion.getText());
+            cita.setFecha(new Date());
+            cita.setHistorialPacienteidHistorialPaciente(historial);
+            cCita.create(cita);
+        }
+        this.jTFPrecio.setText("");
+        this.jTFNombre.setText("");
+        this.jTADescripcion.setText("");
+        this.jTFNit.setText("");
+        this.jCheckPagado.setSelected(false);
+                
     }
     
     private void cargarPacientes(String filtro){
@@ -104,7 +150,7 @@ public class jFCita extends javax.swing.JFrame {
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Cita"));
 
-        jCBCita.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Cita Normal", "Cita Ortodoncia" }));
+        jCBCita.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Cita Ortodoncia", "Cita Normal" }));
         jCBCita.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jCBCitaActionPerformed(evt);
@@ -129,6 +175,11 @@ public class jFCita extends javax.swing.JFrame {
         jLabel3.setText("Descripcion:");
 
         jBAgregar.setText("Agregar");
+        jBAgregar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBAgregarActionPerformed(evt);
+            }
+        });
 
         jTPacientes.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -175,11 +226,16 @@ public class jFCita extends javax.swing.JFrame {
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(jLabel3)
                                 .addGap(0, 0, Short.MAX_VALUE))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                                 .addGap(0, 0, Short.MAX_VALUE)
-                                .addComponent(jBAgregar, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addComponent(jBAgregar, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(18, 18, 18)
+                                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(jTFFiltro, javax.swing.GroupLayout.PREFERRED_SIZE, 204, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGap(83, 83, 83)
                                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -191,26 +247,18 @@ public class jFCita extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jTFPrecio, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(53, 53, 53)
-                                .addComponent(jCheckPagado)))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                                .addComponent(jCheckPagado))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(jLabel4)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jTFNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jLabel5)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jTFNit, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 1, Short.MAX_VALUE)))
                 .addContainerGap())
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jLabel4)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTFNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jLabel5)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTFNit, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jTFFiltro, javax.swing.GroupLayout.PREFERRED_SIZE, 204, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(0, 11, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -266,11 +314,11 @@ public class jFCita extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jCBCitaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCBCitaActionPerformed
-        if(jCBCita.getSelectedIndex() == 0){
+        if(jCBCita.getSelectedIndex() == 1){
             jTFPrecio.setEditable(false);
             jCheckPagado.setEnabled(false);
         }
-        else if (jCBCita.getSelectedIndex() == 1){
+        else if (jCBCita.getSelectedIndex() == 0){
             jTFPrecio.setEditable(true);
             jCheckPagado.setEnabled(true);
         }
@@ -292,7 +340,7 @@ public class jFCita extends javax.swing.JFrame {
             int fila = jTPacientes.getSelectedRow();
             if(fila >= 0){
                 try {
-                    paciente = new Paciente(Integer.parseInt(jTPacientes.getValueAt(fila, 0).toString()));
+                    pacienteC = new Paciente(Integer.parseInt(jTPacientes.getValueAt(fila, 0).toString()));
                     jTFNombre.setText(jTPacientes.getValueAt(fila, 1).toString());
                     jTFNit.setText(jTPacientes.getValueAt(fila, 2).toString());
                 } catch (Exception e) {
@@ -303,6 +351,10 @@ public class jFCita extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_jTPacientesMousePressed
+
+    private void jBAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBAgregarActionPerformed
+        crearCita();
+    }//GEN-LAST:event_jBAgregarActionPerformed
 
     /**
      * @param args the command line arguments

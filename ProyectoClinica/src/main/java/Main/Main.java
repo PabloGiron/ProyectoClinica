@@ -1,6 +1,7 @@
 package Main;
 
 import Entidades.Detalleventa;
+import Entidades.Historialpaciente;
 import Entidades.Producto;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -33,12 +34,13 @@ public class Main {
         System.out.println(i);
         em.close();
         emVentas.close();*/
-        Query queryPacientes = em.createQuery("SELECT p FROM Producto p WHERE p.nombre LIKE :nombre");
-        queryPacientes.setParameter("nombre", "F%".toLowerCase());
-        List<Producto> listaDatos = queryPacientes.getResultList();
-        for(Producto lista : listaDatos){
+        Query queryPacientes = em.createQuery("SELECT h FROM Paciente p INNER JOIN p.historialpacienteList h WHERE p.id = 1 ");
+        //queryPacientes.setParameter("nombre", "F%".toLowerCase());
+        Historialpaciente historial = (Historialpaciente)queryPacientes.getSingleResult();
+        System.out.println(historial.getIdHistorialPaciente());
+        /*for(Producto lista : listaDatos){
             System.out.println(lista.getId() + " " + lista.getNombre() + " " + lista.getPrecio());
-        }
+        }*/
         em.close();
     }
 }

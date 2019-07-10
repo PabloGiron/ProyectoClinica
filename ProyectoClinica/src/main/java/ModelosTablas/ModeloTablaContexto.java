@@ -12,9 +12,9 @@ import javax.swing.table.DefaultTableModel;
  * @author nasc_
  */
 public class ModeloTablaContexto {
-    private ACModeloTabla mod;
+    private AbsModeloTabla mod;
     
-    public ModeloTablaContexto(ACModeloTabla mod){
+    public ModeloTablaContexto(AbsModeloTabla mod){
         this.mod = mod;
     }
     
