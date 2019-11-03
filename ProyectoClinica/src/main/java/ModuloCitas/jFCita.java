@@ -24,20 +24,23 @@ import javax.swing.table.DefaultTableModel;
  */
 public class jFCita extends javax.swing.JFrame {
     
+    //DECLARACION DE VARIABLES GLOBALES
     private DefaultTableModel modeloTabla;
     private EntityManager em = EntityM.getEm();
     private ModeloTablaContexto modTC = null;
     private Paciente pacienteC = null;
+    
     public jFCita() {
         initComponents();
         this.setLocationRelativeTo(null);
         setModeloTabla();
         cargarPacientes("n");
     }
-    
+    //METODO PARA CREAR LA CITA
     private void crearCita(){
         Query queryHistorial = em.createQuery("SELECT h FROM Paciente p INNER JOIN p.historialpacienteList h WHERE p.id = " + pacienteC.getId() + " ");
         Historialpaciente historial = (Historialpaciente)queryHistorial.getSingleResult();
+        //CREA UNA CITA DE ORTODONCIA
         if(String.valueOf(jCBCita.getSelectedItem()).equals("Cita Ortodoncia")){
             Citaortodoncia cita = new Citaortodoncia();
             CitaortodonciaJpaController cCita = new CitaortodonciaJpaController(EntityM.getEmf());
@@ -63,7 +66,8 @@ public class jFCita extends javax.swing.JFrame {
                 cCita.create(cita);
                 
             }
-        }else if(String.valueOf(jCBCita.getSelectedItem()).equals("Cita Ortodoncia")){
+        //CREAR CITA NORMAL
+        }else if(String.valueOf(jCBCita.getSelectedItem()).equals("Cita Normal")){
             Citanormal cita = new Citanormal();
             CitanormalJpaController cCita = new CitanormalJpaController(EntityM.getEmf());
             cita.setDescripcion(jTADescripcion.getText());
@@ -78,7 +82,7 @@ public class jFCita extends javax.swing.JFrame {
         this.jCheckPagado.setSelected(false);
                 
     }
-    
+    //CARGAR PACIENTES A TABLA CON FILTRO PERSONALIZADO
     private void cargarPacientes(String filtro){
         limpiarPacientes();
         Object o[] = null;
@@ -96,7 +100,7 @@ public class jFCita extends javax.swing.JFrame {
         }       
         posicion=0;
     }
-    
+    //METODO DE CREACION DE MODELO DE TABLA
     private void setModeloTabla(){
         try {
             modTC = new ModeloTablaContexto(new ModeloTablaPacientes());
@@ -110,7 +114,7 @@ public class jFCita extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, e.toString() + "error2");
         }
     }
-    
+    //METODO PARA LIMPIAR TABLA PACIENTE
     private void limpiarPacientes()
     {
         try
@@ -320,12 +324,14 @@ public class jFCita extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
+    
     private void jCBCitaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCBCitaActionPerformed
+        //SI EL CHECK BUTTON ESTA EN 1 SE DESHABILITAN EL PRECIO Y EL CHECK DE PAGADO
         if(jCBCita.getSelectedIndex() == 1){
             jTFPrecio.setEditable(false);
             jCheckPagado.setEnabled(false);
         }
+        //SI EL CHECK BUTTON ESTA EN 0 SE HABILITAN EL PRECIO Y EL CHECK DE PAGADO
         else if (jCBCita.getSelectedIndex() == 0){
             jTFPrecio.setEditable(true);
             jCheckPagado.setEnabled(true);
@@ -342,7 +348,7 @@ public class jFCita extends javax.swing.JFrame {
     private void jTFFiltroKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTFFiltroKeyReleased
         cargarPacientes(jTFFiltro.getText());
     }//GEN-LAST:event_jTFFiltroKeyReleased
-
+    //SI SE SELECCIONA UN PACIENTE DE LA TABLA SUS DATOS SE INGRESAN EN LOS TEXTFIELD
     private void jTPacientesMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTPacientesMousePressed
         if(evt.getClickCount() > 1){
             int fila = jTPacientes.getSelectedRow();

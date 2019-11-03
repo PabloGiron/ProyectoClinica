@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package ModuloPacientes;
 
 
@@ -32,6 +27,8 @@ public class CrearTutor extends javax.swing.JFrame {
         llenarTabla();
         cargarDatos();
     }
+    
+    //DECLARACION DE VARIABLES GLOBALES
     TutorpacienteJpaController controladorTutor = new TutorpacienteJpaController(EntityM.getEmf());
     TelefonoJpaController controladorTelefono = new TelefonoJpaController(EntityM.getEmf());
     DefaultTableModel rellenarTabla;
@@ -39,7 +36,7 @@ public class CrearTutor extends javax.swing.JFrame {
     Telefono telefonoEditar;
     private EntityManager em = EntityM.getEm();
     
-    
+    //METODO PARA CARGAR TODOS LOS DATOS DE TABLA TUTORES
     private void llenarTabla() {
         try {
             rellenarTabla = (new DefaultTableModel(
@@ -72,6 +69,7 @@ public class CrearTutor extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, e.toString() + "error2");
         }
     }
+    //METODO PARA CARGAR DATOS DE BUSQUEDA PERSONALIZADA
     private void cargarDatos(){
         Object o[] = null;
         int posicion = 0;
@@ -270,7 +268,7 @@ public class CrearTutor extends javax.swing.JFrame {
     private void txtBusquedaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBusquedaActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtBusquedaActionPerformed
-
+    //AL PRESIONAR UN TUTOR DE LA TABLA PODRA SER MODIFICADO
     private void tablaTutorMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaTutorMousePressed
         // TODO add your handling code here:
         if(evt.getClickCount() > 1){
@@ -293,7 +291,7 @@ public class CrearTutor extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_tablaTutorMousePressed
-
+    //BOTON PARA CREAR UN NUEVO TUTOR
     private void btnCrearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearActionPerformed
         // TODO add your handling code here:
         if(txtNombre.getText().equals("") || txtDireccion.getText().equals("") || txtTelefono.getText().equals("") ){
@@ -328,7 +326,7 @@ public class CrearTutor extends javax.swing.JFrame {
             this.txtTelefono.setText("");
         }
     }//GEN-LAST:event_btnCrearActionPerformed
-
+    //BOTON QUE REALIZA LA BUSQUEDA PERSONALIZADA
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:
         llenarTabla();
@@ -346,7 +344,7 @@ public class CrearTutor extends javax.swing.JFrame {
             posicion++;
         }    
     }//GEN-LAST:event_jButton3ActionPerformed
-
+    //BOTON PARA MODIFICAR UN TUTOR
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
         controladorTutor.actualizarTutor(txtNombre.getText(), txtDireccion.getText(), txtTelefono.getText(), tutorEditar.getId());

@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package ModuloInventario;
 
 import Controladores.ProductoJpaController;
@@ -30,12 +25,13 @@ public class ClienteInventario extends javax.swing.JFrame {
         cargarDatos();
     }
     
-    
+    //DECLARACION DE VARIABLES GLOBALES
     ProductoJpaController controladorInventario = new ProductoJpaController(); 
     DefaultTableModel rellenarTabla;
     Producto productoEditar;
     private EntityManager em = EntityM.getEm();
-            
+    
+    //CREACION DE MODELO DE TABLA
     private void llenarTabla() {
         try {
             rellenarTabla = (new DefaultTableModel(
@@ -70,6 +66,7 @@ public class ClienteInventario extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, e.toString() + "error2");
         }
     }
+    //CARGAR DATOS A TABLA INVENTARIO
     private void cargarDatos(){
         try{
             Object o[] = null;
@@ -106,7 +103,7 @@ public class ClienteInventario extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, e.getMessage());
         }
     }
-    
+    //METODO PARA FILTRAR POR NOMBRE DE PRODUCTO
     public void filtroNombre(){
         llenarTabla();
         int posicion = 0;
@@ -355,7 +352,8 @@ public class ClienteInventario extends javax.swing.JFrame {
     private void txtPrecioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPrecioActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtPrecioActionPerformed
-
+    //SI EL ELEMENTO SELECCIONADO ES EQUIPO SE GENERA UNA LISTA EXTRA CON EL 
+    //TIPO SECUNDARIO DEL EQUIPO
     private void cmbTipoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbTipoActionPerformed
         // TODO add your handling code here:
         if(cmbTipo.getSelectedIndex() == 1){
@@ -369,7 +367,8 @@ public class ClienteInventario extends javax.swing.JFrame {
             cmbTipo2.removeAllItems();
         }
     }//GEN-LAST:event_cmbTipoActionPerformed
-
+    //CUANDO SE SELECCIONA UN PRODUCTO SE RELLENAN LOS TEXTFIELD CON LOS DATOS
+    //PARA SER MODIFICADOS
     private void tablaInventarioMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaInventarioMousePressed
         // TODO add your handling code here:
          if(evt.getClickCount() > 1){
@@ -397,7 +396,7 @@ public class ClienteInventario extends javax.swing.JFrame {
         char letra = evt.getKeyChar();
         if((letra<'0'||letra>'9')) evt.consume();
     }//GEN-LAST:event_txtCantidadKeyTyped
-
+    //BOTON ENCARGADO DE LA CREACION DE UN NUEVO PRODUCTO
     private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
         // TODO add your handling code here:
         if(txtNombre.getText().equals("") || txtPrecio.getText().equals("") || txtCantidad.getText().equals("") ){
@@ -423,7 +422,7 @@ public class ClienteInventario extends javax.swing.JFrame {
 
         }
     }//GEN-LAST:event_btnAgregarActionPerformed
-
+    //BOTON QUE SE ENCARGA REALIZAR LA MODIFICACION
     private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
         // TODO add your handling code here:
          
@@ -446,7 +445,7 @@ public class ClienteInventario extends javax.swing.JFrame {
         this.txtCantidad.setText("");
 
     }//GEN-LAST:event_btnModificarActionPerformed
-
+    //BOTON QUE SE ENCARGA DE ELIMINAR UN PRODUCTI
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
         // TODO add your handling code here:
          try {

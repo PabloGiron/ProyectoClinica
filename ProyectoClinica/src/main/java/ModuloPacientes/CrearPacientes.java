@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package ModuloPacientes;
 
 import Controladores.PacienteJpaController;
@@ -30,6 +24,7 @@ public class CrearPacientes extends javax.swing.JFrame {
         llenarTabla();
         cargarDatos();
     }
+    //DECLARACION DE VARIABLES GLOBALES
     PacienteJpaController controladorPaciente = new PacienteJpaController(EntityM.getEmf());
     TelefonoJpaController controladorTelefono = new TelefonoJpaController(EntityM.getEmf());
     DefaultTableModel rellenarTabla;
@@ -70,6 +65,7 @@ public class CrearPacientes extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, e.toString() + "error2");
         }
     }
+    //METODO PARA CARGAR TODOS DATOS EN LA TABLA DE PACIENTES
     private void cargarDatos(){
         Object o[] = null;
         int posicion = 0;
@@ -282,7 +278,7 @@ public class CrearPacientes extends javax.swing.JFrame {
     private void txtEdadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtEdadActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtEdadActionPerformed
-
+    //BOTON PARA LA CREACION DE UN PACIENTE
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
         if(txtNombre.getText().equals("") || txtDireccion.getText().equals("") || txtTelefono.getText().equals("") ){
@@ -312,7 +308,7 @@ public class CrearPacientes extends javax.swing.JFrame {
 
         }
     }//GEN-LAST:event_jButton1ActionPerformed
-
+    //BOTON QUE REALIZA BUSQUEDA PERSONALIZADA
     private void jToggleButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton1ActionPerformed
         // TODO add your handling code here:
         llenarTabla();
@@ -332,7 +328,7 @@ public class CrearPacientes extends javax.swing.JFrame {
             posicion++;
         }       
     }//GEN-LAST:event_jToggleButton1ActionPerformed
-
+    //BOTON QUE REALIZA LA MODIFICACION DE UN REGISTRO
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
         controladorPaciente.actualizarPaciente(txtNombre.getText(), txtEdad.getText(), txtDireccion.getText(), txtNit.getText(), txtTelefono.getText(), pacienteEditar.getId());
@@ -346,7 +342,7 @@ public class CrearPacientes extends javax.swing.JFrame {
         this.txtNit.setText("");
         this.txtEdad.setText("");
     }//GEN-LAST:event_jButton2ActionPerformed
-
+    //CUANDO SE PRESIONES SOBRE UN PACIENTE EN LA TABLA PODRA SER MODIFICADO
     private void tablaPacientesMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaPacientesMousePressed
         // TODO add your handling code here:
         if(evt.getClickCount() > 1){
