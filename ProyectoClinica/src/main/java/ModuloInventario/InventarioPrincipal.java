@@ -27,8 +27,10 @@ public class InventarioPrincipal extends javax.swing.JFrame {
         llenarTabla();
         cargarDatos();
     }
+    //DELCARACION DE VARIABLES GLOBALES
     ProductoJpaController controladorInventario = new ProductoJpaController(); 
     DefaultTableModel rellenarTabla;
+    //METODO QUE SE ENCARGA DE LA CARGA DE DATOS A LA TABLA
     private void cargarDatos(){
         try{
             llenarTabla();
@@ -68,6 +70,7 @@ public class InventarioPrincipal extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, e.getMessage());
         }
     }
+    //METODO QUE SE ENCARGA DE CARGAR LOS MATERIALES A LA TABLA
     private void cargarMateriales(){
         try{
             llenarTabla();
@@ -89,6 +92,7 @@ public class InventarioPrincipal extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, e.getMessage());
         }
     }
+    //METODO QUE SE ENCARGA DE CARGAR EL EQUIPO A LA TABLA
     private void cargarEquipo(){
         try{
             llenarTabla();
@@ -109,6 +113,7 @@ public class InventarioPrincipal extends javax.swing.JFrame {
         }catch (Exception e){
             JOptionPane.showMessageDialog(null, e.getMessage());
         }
+        //METODO QUE SE ENCARGA DE CARGAR EL INSTRUMENTAL OPERATORIO A LA TABLA
     }
         private void cargarInstrumentalOperatorio(){
         try{
@@ -146,6 +151,7 @@ public class InventarioPrincipal extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, e.getMessage());
         }
     }
+        //METODO PARA LA CREACION DEL MODELO DE TABLA
         private void llenarTabla() {
         try {
             rellenarTabla = (new DefaultTableModel(

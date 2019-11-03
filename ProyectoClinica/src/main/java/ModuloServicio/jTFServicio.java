@@ -18,6 +18,7 @@ import javax.swing.table.DefaultTableModel;
  */
 public class jTFServicio extends javax.swing.JFrame {
     
+    //DECLARACION DE VARIABLES GLOBALES
     private DefaultTableModel modeloTabla;
     private EntityManager em = EntityM.getEm();
     private ModeloTablaContexto modTC = null;
@@ -29,6 +30,7 @@ public class jTFServicio extends javax.swing.JFrame {
         cargarServicios();
     }
     
+    //METODO PARA DAR EL MODELO A LA TABLA DE LOS SERVICIOS
     private void setModeloTabla(){
         try {
             modTC = new ModeloTablaContexto(new ModeloTablaServicios());
@@ -43,6 +45,7 @@ public class jTFServicio extends javax.swing.JFrame {
         }
     }
     
+    //METODO PARA CARGAR LOS SERVICIOS A LA TABLA DE SERVICIOS
     private void cargarServicios(){
         Object o[] = null;
         int posicion = 0;
@@ -58,6 +61,7 @@ public class jTFServicio extends javax.swing.JFrame {
         }       
         posicion=0;
     }
+    //METODO PARA LIMPIAR LA TABLA DE SERVICIOS
     private void limpiarServicios()
     {
         try
@@ -179,7 +183,7 @@ public class jTFServicio extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
+    //BOTÓN UTILIZADO PARA LA CREACIÓN DE VARIABLES
     private void jBAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBAgregarActionPerformed
         if(jTFNombre.getText().equals("") || jTFPrecio.getText().equals("") ){
             JOptionPane.showMessageDialog(null,"Error: Uno de los campos se encuentran vacíos.");

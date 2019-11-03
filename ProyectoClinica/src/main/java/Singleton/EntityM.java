@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Singleton;
 
 import javax.persistence.EntityManager;
@@ -22,7 +17,7 @@ public class EntityM {
     {
         
     }
-
+    //FUNCION QUE RETORNA EL ENTITY MANAGER
     public static EntityManager getEm() {
         if(em == null){
             emf = Persistence.createEntityManagerFactory("Clinica");
@@ -30,7 +25,7 @@ public class EntityM {
         }
         return em;
     }
-
+    //FUNCION QUE RETORNA EL ENTITY MANAGER FACTORY
     public static EntityManagerFactory getEmf() {
         if(emf == null){
             emf = Persistence.createEntityManagerFactory("Clinica");

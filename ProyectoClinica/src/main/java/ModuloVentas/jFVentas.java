@@ -31,6 +31,7 @@ import javax.swing.table.DefaultTableModel;
 
 public class jFVentas extends javax.swing.JFrame {
 
+    //Creación de variables globales
     private DefaultTableModel modeloTabla;
     private EntityManager em = EntityM.getEm();
     private ModeloTablaContexto modTC = null;
@@ -69,6 +70,7 @@ public class jFVentas extends javax.swing.JFrame {
         jTDetalles = new javax.swing.JTable();
         jDCFecha = new com.toedter.calendar.JDateChooser();
         jLabel4 = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
@@ -240,6 +242,13 @@ public class jFVentas extends javax.swing.JFrame {
 
         jLabel4.setText("Seleccionar fecha:");
 
+        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Reporte2.png"))); // NOI18N
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -250,22 +259,26 @@ public class jFVentas extends javax.swing.JFrame {
                     .addComponent(jScrollPane4)
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 499, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                        .addGap(127, 127, 127)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jLabel4)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jDCFecha, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(59, 59, 59)
+                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jDCFecha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel4))
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jDCFecha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel4))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -320,7 +333,7 @@ public class jFVentas extends javax.swing.JFrame {
         });
     }
     
-    //Funciones para limpiar y setear ""
+    //FUNCIONES PARA LIMPIAR Y SETEAR ""
     public void limpiarRegistros()
     {
         try
@@ -335,6 +348,7 @@ public class jFVentas extends javax.swing.JFrame {
             e.printStackTrace();
         }
     }
+    //FUNCION PARA LIMPIAR DETALLES DE VENTA
     public void limpiarDetalles()
     {
         try
@@ -349,6 +363,7 @@ public class jFVentas extends javax.swing.JFrame {
             e.printStackTrace();
         }
     }
+    //FUNCION PARA LIMPIAR VENTAS
     public void limpiarVentas()
     {
         try
@@ -363,7 +378,7 @@ public class jFVentas extends javax.swing.JFrame {
             e.printStackTrace();
         }
     }
-    
+    //FUNCION PARA VERIFICAR SI EXISTEN DATOS EN TABLA DETALLES DE VENTA
     public void verificar()
     {
         int fil = jTNuevos.getRowCount();
@@ -376,7 +391,7 @@ public class jFVentas extends javax.swing.JFrame {
     
     
     
-    //Método que se utilizará para llenar el ComboBox con todos los servicios
+    //METODO QUE SE UTILIZARÁ PARA LLENAR EL COMBOBOX CON TODOS LOS SERVICIOS
     private void llenarCombo(){
         TypedQuery<Servicio> query = em.createNamedQuery("Servicio.findAll", Servicio.class);
         List<Servicio> listaDatos = query.getResultList();
@@ -385,7 +400,7 @@ public class jFVentas extends javax.swing.JFrame {
         }
     }
     
-    //Método utilizado para crear el modelo de la tabla donde se muestran las ventas
+    //METODO UTILIZADO PARA CREAR EL MODELO DE LA TABLA DONDE SE MUESTRAN LAS VENTAS
     private void setModeloTabla(){
         try {
             modTC = new ModeloTablaContexto(new ModeloTablaVentas());
@@ -403,7 +418,7 @@ public class jFVentas extends javax.swing.JFrame {
         }
     }
     
-    //Método utilizado para cargar los datos en la tabla
+    //METODO PARA CARGAR LOS DATOS DE VENTAS EN TABLA VENTAS
     private void cargarVentas(Date fecha){
         limpiarVentas();
         Object o[] = null;
@@ -428,6 +443,7 @@ public class jFVentas extends javax.swing.JFrame {
         }
         posicion=0;
     }
+    //METODO PARA CARGAR DETALLES DE UNA VENTA SELECCIONADA
     private void cargarDetalles(int id){
         Object o[] = null;
         int posicion = 0;
@@ -445,9 +461,9 @@ public class jFVentas extends javax.swing.JFrame {
         posicion=0;
     }
     
-    //Método para crear DetalleVenta
+    //METODO PARA CREAR DETALLEVENTA
     private void crearDetalle(int linea){
-        //Obtención de Querys necesarias 
+        //OBTENCION DE QUERYS NECESARIAS 
         Detalleventa detalle = new Detalleventa();
         DetalleventaJpaController cDetalle = new DetalleventaJpaController(EntityM.getEmf());
         Servicio servicio = new Servicio();
@@ -457,7 +473,7 @@ public class jFVentas extends javax.swing.JFrame {
         servicio = queryServicio.getSingleResult();
         
         Query queryVentasId = em.createNamedQuery("Ventas.idMax", Ventas.class);
-        // Declaración de variables extra
+        //DECLARACION DE VARIABLES EXTRA
         
         float precio = servicio.getPrecio();
         
@@ -477,9 +493,9 @@ public class jFVentas extends javax.swing.JFrame {
         }
     }
     
-    //Método para crear Factura
+    //METODO PARA CREAR FACTURA
     private void crearFactura(){
-        //Creación de Querys
+        //CREACION DE QUERYS
         Ventas venta = new Ventas();
         VentasJpaController cVentas = new VentasJpaController(EntityM.getEmf());
         LibroCompraVenta lbCV = new LibroCompraVenta();
@@ -487,7 +503,7 @@ public class jFVentas extends javax.swing.JFrame {
         
         Query queryLibroId = em.createNamedQuery("LibroCompraVenta.idMax", LibroCompraVenta.class);
         
-        //Declaración de variables
+        //DECLARACION DE VARIABLES
         int idLibro = 0;
         float total = 0;
         Date fecha = jDCFecha.getDate();
@@ -507,7 +523,7 @@ public class jFVentas extends javax.swing.JFrame {
         }
     }
     
-    //Método para actualizar el total de la venta
+    //METODO PARA ACTUALIZAR EL TOTAL DE LA VENTA
     private void totalVenta(){
         Ventas venta = new Ventas();
         VentasJpaController cVentas = new VentasJpaController(EntityM.getEmf());
@@ -532,7 +548,7 @@ public class jFVentas extends javax.swing.JFrame {
         }
     }
     
-    //Métodos/Acciones de botones
+    //METODOS/ACCIONES DE BOTONES
     private void jBAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBAgregarActionPerformed
         int a = 0;
         
@@ -605,6 +621,11 @@ public class jFVentas extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_formWindowClosing
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        jFReporteVentas venta = new jFReporteVentas();
+        venta.setVisible(true);
+    }//GEN-LAST:event_jButton1ActionPerformed
+
     public static void main(String args[]) {
         
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -639,6 +660,7 @@ public class jFVentas extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jBAgregar;
     private javax.swing.JButton jBCrear;
+    private javax.swing.JButton jButton1;
     private javax.swing.JComboBox jCBServicios;
     private com.toedter.calendar.JDateChooser jDCFecha;
     private javax.swing.JLabel jLabel1;

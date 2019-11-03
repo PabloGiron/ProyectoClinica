@@ -13,6 +13,7 @@ import javax.swing.table.DefaultTableModel;
 
 public class jFHistorial extends javax.swing.JFrame {
 
+    //DECLARACION DE VARIABLES GLOBALES
     private DefaultTableModel modeloTabla;
     private EntityManager em = EntityM.getEm();
     private ModeloTablaContexto modTC = null;
@@ -25,7 +26,7 @@ public class jFHistorial extends javax.swing.JFrame {
         jDCInicio.setEnabled(false);
         jDCFin.setEnabled(false);
     }
-
+    //METODO PARA LA CREACION DE MODELO DE TABLA PACIENTE
     private void setModeloTabla(){
         try {
             modTC = new ModeloTablaContexto(new ModeloTablaPacientes());
@@ -40,6 +41,7 @@ public class jFHistorial extends javax.swing.JFrame {
         }
     }
     
+    //METODO PARA CARGAR PACIENTES MEDIANTE FILTRO
     private void cargarPacientes(String filtro){
         limpiarPacientes();
         Object o[] = null;
@@ -62,6 +64,7 @@ public class jFHistorial extends javax.swing.JFrame {
         limpiarHistorial();
     }
     
+    //METODO PARA LIMPIAR LA TABLA PACIENTES
     private void limpiarPacientes()
     {
         try
@@ -76,7 +79,7 @@ public class jFHistorial extends javax.swing.JFrame {
             e.printStackTrace();
         }
     }
-    
+    //METODO PARA LIMPIAR LA TABLA HISTORIAL DEL PACIENTE
     private void limpiarHistorial(){
         try
         {
@@ -265,11 +268,11 @@ public class jFHistorial extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
+    //CUANDO SE INGRESA UNA LETRA EN EL JTEXTFIELD SE CARGAN LOS DATOS CON UN FILTRO
     private void jTFFiltroKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTFFiltroKeyReleased
     cargarPacientes(jTFFiltro.getText());
     }//GEN-LAST:event_jTFFiltroKeyReleased
-
+    //CUANDO SE PRESIONA UN PACIENTE SE OBTIENEN LOS DATOS DEL PACIENTE
     private void jTPacientesMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTPacientesMousePressed
         if(evt.getClickCount() > 1){
             int fila = jTPacientes.getSelectedRow();
