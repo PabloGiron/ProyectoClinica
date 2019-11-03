@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ModuloVentas;
+package ModelosTablas;
 
 import javax.swing.table.DefaultTableModel;
 
@@ -11,6 +11,6 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author nasc_
  */
-public abstract class ACModeloTabla {
+public abstract class AbsModeloTabla {
     public abstract DefaultTableModel getModelo();    
 }

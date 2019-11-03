@@ -1,6 +1,8 @@
 package Main;
 
 import Entidades.Detalleventa;
+import Entidades.Historialpaciente;
+import Entidades.Producto;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -32,12 +34,13 @@ public class Main {
         System.out.println(i);
         em.close();
         emVentas.close();*/
-        Query v = em.createNativeQuery("SELECT servicio.Nombre, detalleventa.Cantidad, detalleventa.Subtotal FROM Servicio INNER JOIN detalleventa ON Servicio.id = detalleventa.Servicio_id WHERE detalleventa.Ventas_id = ?;");
-        v.setParameter(1, 1);
-        List<Object[]> listaDatos = v.getResultList();
-        for(Object[] lista : listaDatos){
-            System.out.println(lista[0] + " " + lista[1] + " " + lista[2]);
-        }
+        Query queryPacientes = em.createQuery("SELECT h FROM Paciente p INNER JOIN p.historialpacienteList h WHERE p.id = 1 ");
+        //queryPacientes.setParameter("nombre", "F%".toLowerCase());
+        Historialpaciente historial = (Historialpaciente)queryPacientes.getSingleResult();
+        System.out.println(historial.getIdHistorialPaciente());
+        /*for(Producto lista : listaDatos){
+            System.out.println(lista.getId() + " " + lista.getNombre() + " " + lista.getPrecio());
+        }*/
         em.close();
     }
 }

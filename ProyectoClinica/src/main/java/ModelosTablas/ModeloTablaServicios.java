@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ModuloVentas;
+package ModelosTablas;
 
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -12,16 +12,16 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author nasc_
  */
-public class ModeloTablaDetalles extends ACModeloTabla{
+public class ModeloTablaServicios extends AbsModeloTabla{
 
     @Override
     public DefaultTableModel getModelo() {
-        DefaultTableModel modelo = null;
+    DefaultTableModel modelo = null;
         try {
             modelo = (new DefaultTableModel(
                     null, new String[]{
-                        "Servicio",
-                        "Cantidad","Subtotal"}) {
+                        "", "Nombre",
+                        "Precio"}) {
                 Class[] types = new Class[]{
                     java.lang.String.class,
                     java.lang.String.class,

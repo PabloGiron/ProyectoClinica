@@ -6,7 +6,6 @@
 package Entidades;
 
 import java.io.Serializable;
-import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,12 +16,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
  *
- * @author oem
+ * @author nasc_
  */
 @Entity
 @Table(name = "paciente")
@@ -50,10 +48,8 @@ public class Paciente implements Serializable {
     @Column(name = "Direccion")
     private String direccion;
     @JoinColumn(name = "TutorPaciente_id", referencedColumnName = "id")
-    @ManyToOne(optional = false)
+    @ManyToOne
     private Tutorpaciente tutorPacienteid;
-    @OneToMany(mappedBy = "pacienteid")
-    private List<Telefono> telefonoList;
 
     public Paciente() {
     }
@@ -108,14 +104,6 @@ public class Paciente implements Serializable {
 
     public void setTutorPacienteid(Tutorpaciente tutorPacienteid) {
         this.tutorPacienteid = tutorPacienteid;
-    }
-
-    public List<Telefono> getTelefonoList() {
-        return telefonoList;
-    }
-
-    public void setTelefonoList(List<Telefono> telefonoList) {
-        this.telefonoList = telefonoList;
     }
 
     @Override

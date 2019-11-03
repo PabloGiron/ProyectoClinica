@@ -1,11 +1,18 @@
 package ModuloVentas;
 
+import ModelosTablas.ModeloTablaDetalles;
+import ModelosTablas.ModeloTablaVentas;
 import Controladores.DetalleventaJpaController;
 import Controladores.VentasJpaController;
-import Entidades.*;
+import Entidades.Detalleventa;
+import Entidades.Servicio;
+import Entidades.Ventas;
+import Entidades.LibroCompraVenta;
+import Main.Cliente;
+import ModelosTablas.ModeloTablaContexto;
+import ModuloServicio.jTFServicio;
 import Singleton.EntityM;
 import java.beans.PropertyChangeListener;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -26,12 +33,12 @@ public class jFVentas extends javax.swing.JFrame {
 
     private DefaultTableModel modeloTabla;
     private EntityManager em = EntityM.getEm();
-    private ACModeloTabla modV = new ModeloTablaVentas();
-    private ACModeloTabla modD = new ModeloTablaDetalles();
+    private ModeloTablaContexto modTC = null;
     private Calendar c = new GregorianCalendar();
     
     public jFVentas() {
         initComponents();
+        this.setLocationRelativeTo(null);
         llenarCombo();
         setModeloTabla();
         cargarVentas(c.getTime());
@@ -55,7 +62,6 @@ public class jFVentas extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jTFFactura = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
-        Existencias = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTVentas = new javax.swing.JTable();
@@ -63,8 +69,16 @@ public class jFVentas extends javax.swing.JFrame {
         jTDetalles = new javax.swing.JTable();
         jDCFecha = new com.toedter.calendar.JDateChooser();
         jLabel4 = new javax.swing.JLabel();
+        jMenuBar1 = new javax.swing.JMenuBar();
+        jMenu1 = new javax.swing.JMenu();
+        jMenuItem1 = new javax.swing.JMenuItem();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Venta"));
 
@@ -125,13 +139,6 @@ public class jFVentas extends javax.swing.JFrame {
 
         jLabel3.setText("No. Factura: ");
 
-        Existencias.setText("Existencias");
-        Existencias.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ExistenciasActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -142,9 +149,7 @@ public class jFVentas extends javax.swing.JFrame {
                         .addGap(35, 35, 35)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 438, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(Existencias)
-                        .addGap(312, 312, 312)
+                        .addGap(405, 405, 405)
                         .addComponent(jBCrear)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(jPanel1Layout.createSequentialGroup()
@@ -190,9 +195,7 @@ public class jFVentas extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jBCrear)
-                    .addComponent(Existencias))
+                .addComponent(jBCrear)
                 .addContainerGap())
         );
 
@@ -267,6 +270,20 @@ public class jFVentas extends javax.swing.JFrame {
                 .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
+
+        jMenu1.setText("Servicios");
+
+        jMenuItem1.setText("Crear Servicios");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem1);
+
+        jMenuBar1.add(jMenu1);
+
+        setJMenuBar(jMenuBar1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -371,13 +388,15 @@ public class jFVentas extends javax.swing.JFrame {
     //Método utilizado para crear el modelo de la tabla donde se muestran las ventas
     private void setModeloTabla(){
         try {
-            modeloTabla = modV.getModelo();
+            modTC = new ModeloTablaContexto(new ModeloTablaVentas());
+            modeloTabla = modTC.ejecutarModel();
             jTVentas.setModel(modeloTabla);
             jTVentas.getColumnModel().getColumn(0).setMaxWidth(0);
             jTVentas.getColumnModel().getColumn(0).setMinWidth(0);
             jTVentas.getColumnModel().getColumn(0).setPreferredWidth(0);
             jTVentas.getColumnModel().getColumn(0).setResizable(false);
-            modeloTabla = modD.getModelo();
+            modTC = new ModeloTablaContexto(new ModeloTablaDetalles());
+            modeloTabla = modTC.ejecutarModel();
             jTDetalles.setModel(modeloTabla);
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, e.toString() + "error2");
@@ -439,11 +458,10 @@ public class jFVentas extends javax.swing.JFrame {
         
         Query queryVentasId = em.createNamedQuery("Ventas.idMax", Ventas.class);
         // Declaración de variables extra
-        float subTotal = 0, precio = 0;
-        int idVenta = 0;
-        precio = servicio.getPrecio();
         
-        idVenta = (Integer)queryVentasId.getSingleResult();
+        float precio = servicio.getPrecio();
+        
+        int idVenta = (Integer)queryVentasId.getSingleResult();
         TypedQuery<Ventas> queryVentas = em.createNamedQuery("Ventas.findById", Ventas.class);
         queryVentas.setParameter("id", idVenta);
         Ventas v = queryVentas.getSingleResult();
@@ -472,7 +490,7 @@ public class jFVentas extends javax.swing.JFrame {
         //Declaración de variables
         int idLibro = 0;
         float total = 0;
-        Date fecha = new Date();
+        Date fecha = jDCFecha.getDate();
         
         idLibro = (Integer)queryLibroId.getSingleResult();
         queryLibro.setParameter("id", idLibro);
@@ -551,23 +569,17 @@ public class jFVentas extends javax.swing.JFrame {
         verificar();
         cargarVentas(jDCFecha.getDate());
         jTFFactura.setText("");
-
     }//GEN-LAST:event_jBCrearActionPerformed
-
-    private void ExistenciasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ExistenciasActionPerformed
-        /*
-        this.setEnabled(false);
-        this.setVisible(false);
-        new Reduc(conexion,this).setVisible(true);*/
-    }//GEN-LAST:event_ExistenciasActionPerformed
 
     private void jTVentasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTVentasMouseClicked
         //AL DARLE DOBLE CLICK A UNA FILA, BUSCARÁ LOS DETALLES DE LA VENTA Y LOS SETEARÁ A LA TABLA
         if(evt.getButton() == 1)
         {
-          limpiarDetalles();
             int fila = jTVentas.getSelectedRow();
-            cargarDetalles((Integer)jTVentas.getValueAt(fila, 0));  
+            if(fila >= 0){
+              limpiarDetalles();
+              cargarDetalles((Integer)jTVentas.getValueAt(fila, 0));
+            }    
         }
     }//GEN-LAST:event_jTVentasMouseClicked
 
@@ -580,6 +592,18 @@ public class jFVentas extends javax.swing.JFrame {
         char letra = evt.getKeyChar();
         if((letra<'0'||letra>'9')) evt.consume();
     }//GEN-LAST:event_jTFFacturaKeyTyped
+
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        jTFServicio servicio = new jTFServicio();
+        servicio.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        Cliente cliente = new Cliente();
+        cliente.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_formWindowClosing
 
     public static void main(String args[]) {
         
@@ -613,7 +637,6 @@ public class jFVentas extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton Existencias;
     private javax.swing.JButton jBAgregar;
     private javax.swing.JButton jBCrear;
     private javax.swing.JComboBox jCBServicios;
@@ -622,6 +645,9 @@ public class jFVentas extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
