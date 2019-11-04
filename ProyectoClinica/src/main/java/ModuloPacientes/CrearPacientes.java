@@ -2,12 +2,16 @@ package ModuloPacientes;
 
 import Controladores.PacienteJpaController;
 import Controladores.TelefonoJpaController;
+import Controladores.TutorpacienteJpaController;
 import Entidades.Paciente;
+import Entidades.Servicio;
 import Entidades.Telefono;
+import Entidades.Tutorpaciente;
 import Singleton.EntityM;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -21,19 +25,26 @@ public class CrearPacientes extends javax.swing.JFrame {
     public CrearPacientes() {
         initComponents();
         this.setLocationRelativeTo(null);
-        llenarTabla();
+        llenarTablaPacientes();
+        llenarTablaTutor();
         cargarDatos();
+        cargarDatosTutor();
     }
     //DECLARACION DE VARIABLES GLOBALES
     PacienteJpaController controladorPaciente = new PacienteJpaController(EntityM.getEmf());
     TelefonoJpaController controladorTelefono = new TelefonoJpaController(EntityM.getEmf());
-    DefaultTableModel rellenarTabla;
+    TutorpacienteJpaController controladorTutor = new TutorpacienteJpaController(EntityM.getEmf());
+    DefaultTableModel rellenarTablaPaciente;
+    DefaultTableModel rellenarTablaTutor;
     Paciente pacienteEditar;
     Telefono telefonoEditar;
+    Tutorpaciente tutorEditar;
+    private int idTutor;
     private EntityManager em = EntityM.getEm();
-    private void llenarTabla() {
+    //METODO PARA CARGAR TODOS LOS DATOS DE TABLA PACIENTES
+    private void llenarTablaPacientes() {
         try {
-            rellenarTabla = (new DefaultTableModel(
+            rellenarTablaPaciente = (new DefaultTableModel(
                     null, new String[]{
                         "Id", "Nombre",
                         "Edad","Direccion",
@@ -60,7 +71,48 @@ public class CrearPacientes extends javax.swing.JFrame {
                     return canEdit[colIndex];
                 }
             });
-            tablaPacientes.setModel(rellenarTabla);
+            tablaPacientes.setModel(rellenarTablaPaciente);
+            tablaPacientes.getColumnModel().getColumn(0).setMaxWidth(0);
+            tablaPacientes.getColumnModel().getColumn(0).setMinWidth(0);
+            tablaPacientes.getColumnModel().getColumn(0).setPreferredWidth(0);
+            tablaPacientes.getColumnModel().getColumn(0).setResizable(false);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e.toString() + "error2");
+        }
+    }
+    //METODO PARA CARGAR TODOS LOS DATOS DE TABLA TUTORES
+    private void llenarTablaTutor() {
+        try {
+            rellenarTablaTutor = (new DefaultTableModel(
+                    null, new String[]{
+                        "Id", "Nombre",
+                        "Direccion","Telefono",
+                        }) {
+                Class[] types = new Class[]{
+                    java.lang.String.class,
+                    java.lang.String.class,
+                    java.lang.String.class,
+                    java.lang.String.class,
+                };
+                boolean[] canEdit = new boolean[]{
+                    false, false, false,false
+                };
+                
+                @Override
+                public Class getColumnClass(int columnIndex) {
+                    return types[columnIndex];
+                }
+
+                @Override
+                public boolean isCellEditable(int rowIndex, int colIndex) {
+                    return canEdit[colIndex];
+                }
+            });
+            tablaTutor2.setModel(rellenarTablaTutor);
+            tablaTutor2.getColumnModel().getColumn(0).setMaxWidth(0);
+            tablaTutor2.getColumnModel().getColumn(0).setMinWidth(0);
+            tablaTutor2.getColumnModel().getColumn(0).setPreferredWidth(0);
+            tablaTutor2.getColumnModel().getColumn(0).setResizable(false);
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, e.toString() + "error2");
         }
@@ -71,15 +123,31 @@ public class CrearPacientes extends javax.swing.JFrame {
         int posicion = 0;
         Query query = em.createNativeQuery("SELECT paciente.id, paciente.Nombre, paciente.Edad, paciente.Direccion, paciente.TutorPaciente_id, telefono.Numero FROM paciente LEFT JOIN telefono ON paciente.id = telefono.Paciente_id;");
         List<Object[]> listaDatos = query.getResultList();
-        rellenarTabla = (DefaultTableModel)tablaPacientes.getModel();
+        rellenarTablaPaciente = (DefaultTableModel)tablaPacientes.getModel();
         for(Object[] lista : listaDatos){
-            rellenarTabla.addRow(o);
-            rellenarTabla.setValueAt(lista[0], posicion, 0);
-            rellenarTabla.setValueAt(lista[1], posicion, 1);
-            rellenarTabla.setValueAt(lista[2], posicion, 2);
-            rellenarTabla.setValueAt(lista[3], posicion, 3);
-            rellenarTabla.setValueAt(lista[4], posicion, 4);
-            rellenarTabla.setValueAt(lista[5], posicion, 5);
+            rellenarTablaPaciente.addRow(o);
+            rellenarTablaPaciente.setValueAt(lista[0], posicion, 0);
+            rellenarTablaPaciente.setValueAt(lista[1], posicion, 1);
+            rellenarTablaPaciente.setValueAt(lista[2], posicion, 2);
+            rellenarTablaPaciente.setValueAt(lista[3], posicion, 3);
+            rellenarTablaPaciente.setValueAt(lista[4], posicion, 4);
+            rellenarTablaPaciente.setValueAt(lista[5], posicion, 5);
+            posicion++;
+        }       
+    }
+    //METODO PARA CARGAR DATOS  EN LA TABLA TUTORES
+    private void cargarDatosTutor(){
+        Object o[] = null;
+        int posicion = 0;
+        Query query = em.createNativeQuery("SELECT tutorpaciente.*, telefono.Numero FROM tutorpaciente LEFT JOIN telefono ON tutorpaciente.id = telefono.TutorPaciente_id;");
+        List<Object[]> listaDatos = query.getResultList();
+        rellenarTablaTutor = (DefaultTableModel)tablaTutor2.getModel();
+        for(Object[] lista : listaDatos){
+            rellenarTablaTutor.addRow(o);
+            rellenarTablaTutor.setValueAt(lista[0], posicion, 0);
+            rellenarTablaTutor.setValueAt(lista[1], posicion, 1);
+            rellenarTablaTutor.setValueAt(lista[2], posicion, 2);
+            rellenarTablaTutor.setValueAt(lista[3], posicion, 3);
             posicion++;
         }       
     }
@@ -102,14 +170,21 @@ public class CrearPacientes extends javax.swing.JFrame {
         txtNit = new javax.swing.JTextField();
         txtDireccion = new javax.swing.JTextField();
         txtTelefono = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
+        btnCrear = new javax.swing.JButton();
         jLabel6 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tablaPacientes = new javax.swing.JTable();
         txtBusqueda = new javax.swing.JTextField();
-        jToggleButton1 = new javax.swing.JToggleButton();
+        btnBuscarPaciente = new javax.swing.JToggleButton();
         jButton2 = new javax.swing.JButton();
+        jPanel4 = new javax.swing.JPanel();
+        btnBuscarTutor = new javax.swing.JButton();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        tablaTutor2 = new javax.swing.JTable();
+        txtBusqueda3 = new javax.swing.JTextField();
+        jLabel7 = new javax.swing.JLabel();
+        txtTutor = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -134,17 +209,17 @@ public class CrearPacientes extends javax.swing.JFrame {
             }
         });
 
-        jButton1.setText("Ingresar");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        btnCrear.setText("Ingresar");
+        btnCrear.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btnCrearActionPerformed(evt);
             }
         });
 
         jLabel6.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
         jLabel6.setText("Nuevo paciente");
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Filtro de búsqueda"));
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Filtro de búsqueda Paciente"));
 
         tablaPacientes.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -164,10 +239,10 @@ public class CrearPacientes extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(tablaPacientes);
 
-        jToggleButton1.setText("Buscar");
-        jToggleButton1.addActionListener(new java.awt.event.ActionListener() {
+        btnBuscarPaciente.setText("Buscar");
+        btnBuscarPaciente.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jToggleButton1ActionPerformed(evt);
+                btnBuscarPacienteActionPerformed(evt);
             }
         });
 
@@ -178,13 +253,13 @@ public class CrearPacientes extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                    .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 452, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(txtBusqueda, javax.swing.GroupLayout.PREFERRED_SIZE, 208, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jToggleButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(btnBuscarPaciente)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -193,7 +268,7 @@ public class CrearPacientes extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtBusqueda, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jToggleButton1))
+                    .addComponent(btnBuscarPaciente))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 16, Short.MAX_VALUE)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 263, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -206,6 +281,69 @@ public class CrearPacientes extends javax.swing.JFrame {
             }
         });
 
+        jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder("Filtro de búsqueda Tutor"));
+
+        btnBuscarTutor.setText("Buscar");
+        btnBuscarTutor.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBuscarTutorActionPerformed(evt);
+            }
+        });
+
+        tablaTutor2.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {},
+                {},
+                {},
+                {}
+            },
+            new String [] {
+
+            }
+        ));
+        tablaTutor2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                tablaTutor2MousePressed(evt);
+            }
+        });
+        jScrollPane4.setViewportView(tablaTutor2);
+
+        txtBusqueda3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtBusqueda3ActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
+        jPanel4Layout.setHorizontalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addComponent(txtBusqueda3, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 112, Short.MAX_VALUE)
+                        .addComponent(btnBuscarTutor, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        jPanel4Layout.setVerticalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtBusqueda3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnBuscarTutor))
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 263, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+
+        jLabel7.setText("Tutor:");
+
+        txtTutor.setEnabled(false);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -215,33 +353,37 @@ public class CrearPacientes extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel1)
-                            .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
+                            .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(btnCrear, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, 87, Short.MAX_VALUE)))
+                        .addGap(30, 30, 30))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel1)
+                                .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(txtTutor)
                             .addComponent(txtTelefono)
                             .addComponent(txtDireccion)
                             .addComponent(txtNit)
                             .addComponent(txtEdad)
-                            .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addGap(30, 30, 30)
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(34, 34, 34))
+                            .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)))
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(26, 26, 26)
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(44, 44, 44)
                 .addComponent(jLabel6)
@@ -266,10 +408,20 @@ public class CrearPacientes extends javax.swing.JFrame {
                     .addComponent(jLabel5)
                     .addComponent(txtTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel7)
+                    .addComponent(txtTutor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 39, Short.MAX_VALUE)
+                    .addComponent(btnCrear, javax.swing.GroupLayout.DEFAULT_SIZE, 39, Short.MAX_VALUE)
                     .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(30, 30, 30))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(26, 26, 26)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         pack();
@@ -279,7 +431,7 @@ public class CrearPacientes extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtEdadActionPerformed
     //BOTON PARA LA CREACION DE UN PACIENTE
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void btnCrearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearActionPerformed
         // TODO add your handling code here:
         if(txtNombre.getText().equals("") || txtDireccion.getText().equals("") || txtTelefono.getText().equals("") ){
             JOptionPane.showMessageDialog(null,"Error: Uno de los campos se encuentran vacíos.");
@@ -290,11 +442,19 @@ public class CrearPacientes extends javax.swing.JFrame {
                 paciente.setNombre(txtNombre.getText());
                 paciente.setEdad(Integer.parseInt(txtEdad.getText()));
                 paciente.setDireccion((txtDireccion.getText()));
+                paciente.setNit(txtNit.getText());
+                if(!txtTutor.getText().equals(""))
+                {
+                    TypedQuery<Tutorpaciente> queryTutorPaciente = em.createNamedQuery("Tutorpaciente.findById", Tutorpaciente.class);
+                    queryTutorPaciente.setParameter("id", idTutor);
+                    Tutorpaciente tutorpaciente = queryTutorPaciente.getSingleResult();
+                    paciente.setTutorPacienteid(tutorpaciente);
+                }
                 telefono.setNumero(txtTelefono.getText());
                 telefono.setPacienteid(paciente);
                 controladorPaciente.create(paciente);
                 controladorTelefono.create(telefono);
-                llenarTabla();
+                llenarTablaPacientes();
                 cargarDatos();
                 JOptionPane.showMessageDialog(null,"Se ha creado un nuevo registro.");
             }catch(Exception e){ JOptionPane.showMessageDialog(null, e.getMessage());}
@@ -305,34 +465,35 @@ public class CrearPacientes extends javax.swing.JFrame {
             this.txtEdad.setText("");
             this.txtTelefono.setText("");
             this.txtNit.setText("");
+            this.txtTutor.setText("");
 
         }
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_btnCrearActionPerformed
     //BOTON QUE REALIZA BUSQUEDA PERSONALIZADA
-    private void jToggleButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton1ActionPerformed
+    private void btnBuscarPacienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarPacienteActionPerformed
         // TODO add your handling code here:
-        llenarTabla();
+        llenarTablaPacientes();
         Object o[] = null;
         int posicion = 0;
         Query query = em.createNativeQuery("SELECT paciente.id, paciente.Nombre, paciente.Edad, paciente.Direccion, paciente.TutorPaciente_id, telefono.Numero FROM paciente LEFT JOIN telefono ON paciente.id = telefono.Paciente_id WHERE paciente.Nombre LIKE '%"+txtBusqueda.getText()+"%';");
         List<Object[]> listaDatos = query.getResultList();
-        rellenarTabla = (DefaultTableModel)tablaPacientes.getModel();
+        rellenarTablaPaciente = (DefaultTableModel)tablaPacientes.getModel();
         for(Object[] lista : listaDatos){
-            rellenarTabla.addRow(o);
-            rellenarTabla.setValueAt(lista[0], posicion, 0);
-            rellenarTabla.setValueAt(lista[1], posicion, 1);
-            rellenarTabla.setValueAt(lista[2], posicion, 2);
-            rellenarTabla.setValueAt(lista[3], posicion, 3);
-            rellenarTabla.setValueAt(lista[4], posicion, 4);
-            rellenarTabla.setValueAt(lista[5], posicion, 5);
+            rellenarTablaPaciente.addRow(o);
+            rellenarTablaPaciente.setValueAt(lista[0], posicion, 0);
+            rellenarTablaPaciente.setValueAt(lista[1], posicion, 1);
+            rellenarTablaPaciente.setValueAt(lista[2], posicion, 2);
+            rellenarTablaPaciente.setValueAt(lista[3], posicion, 3);
+            rellenarTablaPaciente.setValueAt(lista[4], posicion, 4);
+            rellenarTablaPaciente.setValueAt(lista[5], posicion, 5);
             posicion++;
         }       
-    }//GEN-LAST:event_jToggleButton1ActionPerformed
+    }//GEN-LAST:event_btnBuscarPacienteActionPerformed
     //BOTON QUE REALIZA LA MODIFICACION DE UN REGISTRO
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
         controladorPaciente.actualizarPaciente(txtNombre.getText(), txtEdad.getText(), txtDireccion.getText(), txtNit.getText(), txtTelefono.getText(), pacienteEditar.getId());
-        llenarTabla();
+        llenarTablaPacientes();
         cargarDatos();
         JOptionPane.showMessageDialog(null,"Se ha actulizado un registro exitosamente.");
 
@@ -372,6 +533,45 @@ public class CrearPacientes extends javax.swing.JFrame {
         clienteP.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_formWindowClosing
+    //BOTON QUE REALIZA LA BUSQUEDA PERSONALIZADA
+    private void btnBuscarTutorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarTutorActionPerformed
+        // TODO add your handling code here:
+        llenarTablaTutor();
+        int posicion = 0;
+        Object o[] = null;
+        Query query = em.createNativeQuery("SELECT tutorpaciente.*, telefono.Numero FROM tutorpaciente LEFT JOIN telefono ON tutorpaciente.id = telefono.TutorPaciente_id WHERE tutorpaciente.Nombre LIKE '%"+txtBusqueda.getText()+"%';");
+        List<Object[]> listaDatos = query.getResultList();
+        rellenarTablaTutor = (DefaultTableModel)tablaTutor2.getModel();
+        for(Object[] lista : listaDatos){
+            rellenarTablaTutor.addRow(o);
+            rellenarTablaTutor.setValueAt(lista[0], posicion, 0);
+            rellenarTablaTutor.setValueAt(lista[1], posicion, 1);
+            rellenarTablaTutor.setValueAt(lista[2], posicion, 2);
+            rellenarTablaTutor.setValueAt(lista[3], posicion, 3);
+            posicion++;
+        }
+    }//GEN-LAST:event_btnBuscarTutorActionPerformed
+    //AL PRESIONAR UN TUTOR DE LA TABLA PODRA SER MODIFICADO
+    private void tablaTutor2MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaTutor2MousePressed
+        // TODO add your handling code here:
+        if(evt.getClickCount() > 1){
+            int fila = tablaTutor2.getSelectedRow();
+            if(fila >= 0){
+                try {
+                    txtTutor.setText(tablaTutor2.getValueAt(fila, 1).toString());
+                    idTutor = Integer.parseInt(tablaTutor2.getValueAt(fila, 0).toString());
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(null, e.getMessage());
+                }
+            }else{
+                JOptionPane.showMessageDialog(null,"No ha seleccionado ninguna fila.");
+            }
+        }
+    }//GEN-LAST:event_tablaTutor2MousePressed
+
+    private void txtBusqueda3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBusqueda3ActionPerformed
+
+    }//GEN-LAST:event_txtBusqueda3ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -409,7 +609,9 @@ public class CrearPacientes extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
+    private javax.swing.JToggleButton btnBuscarPaciente;
+    private javax.swing.JButton btnBuscarTutor;
+    private javax.swing.JButton btnCrear;
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -417,16 +619,21 @@ public class CrearPacientes extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JToggleButton jToggleButton1;
+    private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JTable tablaPacientes;
+    private javax.swing.JTable tablaTutor2;
     private javax.swing.JTextField txtBusqueda;
+    private javax.swing.JTextField txtBusqueda3;
     private javax.swing.JTextField txtDireccion;
     private javax.swing.JTextField txtEdad;
     private javax.swing.JTextField txtNit;
     private javax.swing.JTextField txtNombre;
     private javax.swing.JTextField txtTelefono;
+    private javax.swing.JTextField txtTutor;
     // End of variables declaration//GEN-END:variables
 
 }
