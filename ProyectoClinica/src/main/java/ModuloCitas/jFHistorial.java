@@ -120,7 +120,12 @@ public class jFHistorial extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Hisorial del paciente"));
 
@@ -296,6 +301,12 @@ public class jFHistorial extends javax.swing.JFrame {
     private void jTOrtodonciaMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTOrtodonciaMousePressed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTOrtodonciaMousePressed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        jFCita cita = new jFCita();
+        cita.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_formWindowClosing
 
     /**
      * @param args the command line arguments
