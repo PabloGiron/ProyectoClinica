@@ -1,14 +1,9 @@
 package ModuloInventario;
 
-
-import static Bitacora.AgregarBitacora.crearTransaccion;
 import Controladores.ProductoJpaController;
 import Entidades.Producto;
 import Singleton.EntityM;
-import java.io.IOException;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.swing.JOptionPane;
@@ -35,7 +30,6 @@ public class ClienteInventario extends javax.swing.JFrame {
     DefaultTableModel rellenarTabla;
     Producto productoEditar;
     private EntityManager em = EntityM.getEm();
-    //int numTransaccion = ObtenerNumTransaccion();
     
     //CREACION DE MODELO DE TABLA
     private void llenarTabla() {
@@ -214,9 +208,6 @@ public class ClienteInventario extends javax.swing.JFrame {
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 tablaInventarioMousePressed(evt);
             }
-            public void mouseReleased(java.awt.event.MouseEvent evt) {
-                tablaInventarioMouseReleased(evt);
-            }
         });
         jScrollPane1.setViewportView(tablaInventario);
 
@@ -346,7 +337,7 @@ public class ClienteInventario extends javax.swing.JFrame {
                     .addComponent(btnAgregar))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 8, Short.MAX_VALUE)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(20, 20, 20))
         );
@@ -378,7 +369,6 @@ public class ClienteInventario extends javax.swing.JFrame {
     }//GEN-LAST:event_cmbTipoActionPerformed
     //CUANDO SE SELECCIONA UN PRODUCTO SE RELLENAN LOS TEXTFIELD CON LOS DATOS
     //PARA SER MODIFICADOS
-    public String nombre,cantidad,precio;
     private void tablaInventarioMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaInventarioMousePressed
         // TODO add your handling code here:
          if(evt.getClickCount() > 1){
@@ -387,11 +377,8 @@ public class ClienteInventario extends javax.swing.JFrame {
                 try {
                     productoEditar = new Producto(Integer.parseInt(tablaInventario.getValueAt(fila, 0).toString()));
                     txtNombre.setText(tablaInventario.getValueAt(fila, 1).toString());
-                    nombre = txtNombre.getText();
                     txtCantidad.setText(tablaInventario.getValueAt(fila, 2).toString());
-                    cantidad = txtCantidad.getText();
                     txtPrecio.setText(tablaInventario.getValueAt(fila, 3).toString());
-                    precio = txtPrecio.getText();
                     //cmbTipo.setSelectedItem(Integer.parseInt(tablaInventario.getValueAt(fila, 4).toString())+1);
                     //cmbTipo2.setSelectedIndex(Integer.parseInt(tablaInventario.getValueAt(fila, 5).toString())+1);
 
@@ -414,10 +401,8 @@ public class ClienteInventario extends javax.swing.JFrame {
         // TODO add your handling code here:
         if(txtNombre.getText().equals("") || txtPrecio.getText().equals("") || txtCantidad.getText().equals("") ){
             JOptionPane.showMessageDialog(null,"Error: Uno de los campos se encuentran vacíos.");
-            crearTransaccion("Escritura tabla producto: ERROR uno o más de los campos se encontraba vacío", 2);
         }else{
             try{
-                
                 Producto producto = new Producto ();
                 producto.setNombre(txtNombre.getText());
                 producto.setCantidad(Integer.parseInt(txtCantidad.getText()));
@@ -427,10 +412,6 @@ public class ClienteInventario extends javax.swing.JFrame {
                 controladorInventario.crear(producto);
                 llenarTabla();
                 cargarDatos();
-                crearTransaccion("Escritura tabla producto,"+txtNombre.getText()+","+txtCantidad.getText()+","+txtPrecio.getText()+","+(cmbTipo.getSelectedIndex()+1)+","+(cmbTipo2.getSelectedIndex()+1), 1);
-                //iniciarTransaccion();
-                //agregarTransaccion("Escritura tabla producto,"+txtNombre.getText()+","+txtCantidad.getText()+","+txtPrecio.getText()+","+(cmbTipo.getSelectedIndex()+1)+","+(cmbTipo2.getSelectedIndex()+1));
-                //finalizarTransaccion(1);
                 JOptionPane.showMessageDialog(null,"Se ha creado un nuevo registro.");
             }catch(Exception e){ JOptionPane.showMessageDialog(null, e.getMessage());}
             //-------------------------
@@ -455,8 +436,7 @@ public class ClienteInventario extends javax.swing.JFrame {
             llenarTabla();
             cargarDatos();
        //    controladorInventario.edit(productoEditar);
-            JOptionPane.showMessageDialog(null, "El registro se ha modificado.");
-            crearTransaccion("Modificación tabla producto, Nombre viejo: "+nombre+" Nombre nuevo:"+txtNombre.getText()+",Cantidad vieja: "+cantidad+" Cantidad nueva: "+txtCantidad.getText()+", Precio viejo: "+precio+" Precio nuevo: "+txtPrecio.getText()+","+(cmbTipo.getSelectedIndex()+1)+","+(cmbTipo2.getSelectedIndex()+1), 1);
+        JOptionPane.showMessageDialog(null, "El registro se ha modificado.");
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, e.getMessage());
         }
@@ -469,7 +449,6 @@ public class ClienteInventario extends javax.swing.JFrame {
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
         // TODO add your handling code here:
          try {
-            crearTransaccion("Eliminación de tabla producto,"+txtNombre.getText()+","+txtCantidad.getText()+","+txtPrecio.getText()+","+(cmbTipo.getSelectedIndex()+1)+","+(cmbTipo2.getSelectedIndex()+1), 1);
             controladorInventario.eliminar((int) tablaInventario.getValueAt(tablaInventario.getSelectedRow(), 0));
             llenarTabla();
             cargarDatos();
@@ -493,10 +472,6 @@ public class ClienteInventario extends javax.swing.JFrame {
         inventario.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_formWindowClosing
-
-    private void tablaInventarioMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaInventarioMouseReleased
-        // TODO add your handling code here:
-    }//GEN-LAST:event_tablaInventarioMouseReleased
 
     /**
      * @param args the command line arguments

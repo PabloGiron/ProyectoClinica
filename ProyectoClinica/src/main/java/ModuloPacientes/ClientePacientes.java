@@ -57,10 +57,6 @@ public class ClientePacientes extends javax.swing.JFrame {
                 }
             });
             tablaPacientes.setModel(rellenarTabla);
-            tablaPacientes.getColumnModel().getColumn(0).setMaxWidth(0);
-            tablaPacientes.getColumnModel().getColumn(0).setMinWidth(0);
-            tablaPacientes.getColumnModel().getColumn(0).setPreferredWidth(0);
-            tablaPacientes.getColumnModel().getColumn(0).setResizable(false);
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, e.toString() + "error2");
         }
@@ -229,6 +225,7 @@ public class ClientePacientes extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        // TODO add your handling code here:
         CrearPacientes crearPaciente = new CrearPacientes();
         crearPaciente.setVisible(true);
         this.dispose();

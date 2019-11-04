@@ -1,7 +1,5 @@
 package ModuloServicio;
 
-import Bitacora.AgregarBitacora;
-import static Bitacora.AgregarBitacora.crearTransaccion;
 import Controladores.ServicioJpaController;
 import Entidades.Servicio;
 import ModelosTablas.ModeloTablaContexto;
@@ -189,7 +187,6 @@ public class jTFServicio extends javax.swing.JFrame {
     private void jBAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBAgregarActionPerformed
         if(jTFNombre.getText().equals("") || jTFPrecio.getText().equals("") ){
             JOptionPane.showMessageDialog(null,"Error: Uno de los campos se encuentran vacíos.");
-            crearTransaccion("Error al crear el servicio, uno o más campos se encuentran vacíos", 2);
         }
         else if(Integer.parseInt(jTFPrecio.getText()) < 1){
             JOptionPane.showMessageDialog(null,"Error: El precio debe ser mayor a 0.");
@@ -203,7 +200,6 @@ public class jTFServicio extends javax.swing.JFrame {
                 limpiarServicios();
                 cargarServicios();
                 JOptionPane.showMessageDialog(null,"Se ha creado un nuevo registro.");
-                crearTransaccion("Escritura tabla servicio,"+jTFNombre.getText()+","+jTFPrecio.getText(), 1);
             }catch(Exception e){ JOptionPane.showMessageDialog(null, e.getMessage());}
             this.jTFPrecio.setText("");
             this.jTFNombre.setText("");

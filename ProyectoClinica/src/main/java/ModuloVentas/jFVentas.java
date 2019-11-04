@@ -1,9 +1,5 @@
 package ModuloVentas;
 
-import Bitacora.AgregarBitacora;
-import static Bitacora.AgregarBitacora.agregarTransaccion;
-import static Bitacora.AgregarBitacora.finalizarTransaccion;
-import static Bitacora.AgregarBitacora.iniciarTransaccion;
 import ModelosTablas.ModeloTablaDetalles;
 import ModelosTablas.ModeloTablaVentas;
 import Controladores.DetalleventaJpaController;
@@ -263,6 +259,7 @@ public class jFVentas extends javax.swing.JFrame {
                     .addComponent(jScrollPane4)
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 499, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jLabel4)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jDCFecha, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -550,14 +547,11 @@ public class jFVentas extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, e.getMessage());
         }
     }
-    public int primeraVez = 0, id_libro;
+    
     //METODOS/ACCIONES DE BOTONES
     private void jBAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBAgregarActionPerformed
         int a = 0;
-        primeraVez++;
-        if(primeraVez == 1){
-            iniciarTransaccion();
-        }
+        
         if(!"".equals(jTFCantidad.getText()))
         {
             a = Integer.parseInt(jTFCantidad.getText());
@@ -570,7 +564,6 @@ public class jFVentas extends javax.swing.JFrame {
             fila[0] = (String)jCBServicios.getSelectedItem();
             fila[1] = jTFCantidad.getText();
             modelo.addRow(fila);
-            agregarTransaccion("Creacion de venta, Servicio: "+(String)jCBServicios.getSelectedItem()+", Cantidad: "+jTFCantidad.getText());
         }    
         else
         {
@@ -592,14 +585,8 @@ public class jFVentas extends javax.swing.JFrame {
         verificar();
         cargarVentas(jDCFecha.getDate());
         jTFFactura.setText("");
-        finalizarTransaccion(1);
-        primeraVez=0;
     }//GEN-LAST:event_jBCrearActionPerformed
 
-    /**
-     * 
-     * @param evt 
-     */
     private void jTVentasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTVentasMouseClicked
         //AL DARLE DOBLE CLICK A UNA FILA, BUSCARÁ LOS DETALLES DE LA VENTA Y LOS SETEARÁ A LA TABLA
         if(evt.getButton() == 1)

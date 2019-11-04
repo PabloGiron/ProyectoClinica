@@ -1,7 +1,6 @@
 package ModuloPacientes;
 
 
-import static Bitacora.AgregarBitacora.crearTransaccion;
 import Controladores.TelefonoJpaController;
 import Controladores.TutorpacienteJpaController;
 import Entidades.Telefono;
@@ -66,10 +65,6 @@ public class CrearTutor extends javax.swing.JFrame {
                 }
             });
             tablaTutor.setModel(rellenarTabla);
-            tablaTutor.getColumnModel().getColumn(0).setMaxWidth(0);
-            tablaTutor.getColumnModel().getColumn(0).setMinWidth(0);
-            tablaTutor.getColumnModel().getColumn(0).setPreferredWidth(0);
-            tablaTutor.getColumnModel().getColumn(0).setResizable(false);
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, e.toString() + "error2");
         }
@@ -273,8 +268,6 @@ public class CrearTutor extends javax.swing.JFrame {
     private void txtBusquedaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBusquedaActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtBusquedaActionPerformed
-    
-    public String nombre,direccion,telefono;
     //AL PRESIONAR UN TUTOR DE LA TABLA PODRA SER MODIFICADO
     private void tablaTutorMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaTutorMousePressed
         // TODO add your handling code here:
@@ -286,11 +279,9 @@ public class CrearTutor extends javax.swing.JFrame {
                     //telefonoEditar = new Telefono(tutorEditar.getId());
                     System.out.println(Integer.parseInt(tablaTutor.getValueAt(fila, 0).toString()));
                     txtNombre.setText(tablaTutor.getValueAt(fila, 1).toString());
-                    nombre = txtNombre.getText();
                     txtDireccion.setText(tablaTutor.getValueAt(fila, 2).toString());
-                    direccion = txtDireccion.getText();
                     txtTelefono.setText(tablaTutor.getValueAt(fila, 3).toString());
-                    telefono = txtTelefono.getText();
+
 
                 } catch (Exception e) {
                     JOptionPane.showMessageDialog(null, e.getMessage());
@@ -305,7 +296,6 @@ public class CrearTutor extends javax.swing.JFrame {
         // TODO add your handling code here:
         if(txtNombre.getText().equals("") || txtDireccion.getText().equals("") || txtTelefono.getText().equals("") ){
             JOptionPane.showMessageDialog(null,"Error: Uno de los campos se encuentran vacíos.");
-            crearTransaccion("Error creación de un nuevo tutor, uno o más campos se encontraban vacíos",2);
         }else{
             try{
                 Tutorpaciente tutor = new Tutorpaciente ();
@@ -328,7 +318,6 @@ public class CrearTutor extends javax.swing.JFrame {
                 llenarTabla();
                 cargarDatos();
                 JOptionPane.showMessageDialog(null,"Se ha creado un nuevo registro.");
-                crearTransaccion("Escritura tabla tutor,"+txtNombre.getText()+","+txtDireccion.getText()+","+txtTelefono.getText(), 1);
             }catch(Exception e){ JOptionPane.showMessageDialog(null, e.getMessage());}
             //-------------------------
 
@@ -361,7 +350,6 @@ public class CrearTutor extends javax.swing.JFrame {
         controladorTutor.actualizarTutor(txtNombre.getText(), txtDireccion.getText(), txtTelefono.getText(), tutorEditar.getId());
         llenarTabla();
         cargarDatos();
-        crearTransaccion("Modificación tabla tutor, Nombre antiguo: "+nombre+" Nombre nuevo:"+txtNombre.getText()+",direccion antigua: "+direccion+" direccion nueva: "+txtDireccion.getText()+", telefono antiguo: "+telefono+"telefono nuevo: "+txtTelefono.getText(), 1);
         JOptionPane.showMessageDialog(null,"Se ha actulizado un registro exitosamente.");
 
         this.txtDireccion.setText("");
