@@ -1,5 +1,7 @@
 package ModuloServicio;
 
+import Bitacora.AgregarBitacora;
+import static Bitacora.AgregarBitacora.crearTransaccion;
 import Controladores.ServicioJpaController;
 import Entidades.Servicio;
 import ModelosTablas.ModeloTablaContexto;
@@ -18,6 +20,7 @@ import javax.swing.table.DefaultTableModel;
  */
 public class jTFServicio extends javax.swing.JFrame {
     
+    //DECLARACION DE VARIABLES GLOBALES
     private DefaultTableModel modeloTabla;
     private EntityManager em = EntityM.getEm();
     private ModeloTablaContexto modTC = null;
@@ -29,6 +32,7 @@ public class jTFServicio extends javax.swing.JFrame {
         cargarServicios();
     }
     
+    //METODO PARA DAR EL MODELO A LA TABLA DE LOS SERVICIOS
     private void setModeloTabla(){
         try {
             modTC = new ModeloTablaContexto(new ModeloTablaServicios());
@@ -43,6 +47,7 @@ public class jTFServicio extends javax.swing.JFrame {
         }
     }
     
+    //METODO PARA CARGAR LOS SERVICIOS A LA TABLA DE SERVICIOS
     private void cargarServicios(){
         Object o[] = null;
         int posicion = 0;
@@ -58,6 +63,7 @@ public class jTFServicio extends javax.swing.JFrame {
         }       
         posicion=0;
     }
+    //METODO PARA LIMPIAR LA TABLA DE SERVICIOS
     private void limpiarServicios()
     {
         try
@@ -179,10 +185,11 @@ public class jTFServicio extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
+    //BOTÓN UTILIZADO PARA LA CREACIÓN DE VARIABLES
     private void jBAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBAgregarActionPerformed
         if(jTFNombre.getText().equals("") || jTFPrecio.getText().equals("") ){
             JOptionPane.showMessageDialog(null,"Error: Uno de los campos se encuentran vacíos.");
+            crearTransaccion("Error al crear el servicio, uno o más campos se encuentran vacíos", 2);
         }
         else if(Integer.parseInt(jTFPrecio.getText()) < 1){
             JOptionPane.showMessageDialog(null,"Error: El precio debe ser mayor a 0.");
@@ -196,6 +203,7 @@ public class jTFServicio extends javax.swing.JFrame {
                 limpiarServicios();
                 cargarServicios();
                 JOptionPane.showMessageDialog(null,"Se ha creado un nuevo registro.");
+                crearTransaccion("Escritura tabla servicio,"+jTFNombre.getText()+","+jTFPrecio.getText(), 1);
             }catch(Exception e){ JOptionPane.showMessageDialog(null, e.getMessage());}
             this.jTFPrecio.setText("");
             this.jTFNombre.setText("");

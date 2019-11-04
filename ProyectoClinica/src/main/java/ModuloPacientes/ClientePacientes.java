@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package ModuloPacientes;
 
 import Main.Cliente;
@@ -29,6 +24,7 @@ public class ClientePacientes extends javax.swing.JFrame {
         llenarTabla();
         cargarDatos();
     }
+    //CREACION DE MODELO DE TABLA PACIENTES
     DefaultTableModel rellenarTabla;
     private EntityManager em = EntityM.getEm();
     private void llenarTabla() {
@@ -61,11 +57,16 @@ public class ClientePacientes extends javax.swing.JFrame {
                 }
             });
             tablaPacientes.setModel(rellenarTabla);
+            tablaPacientes.getColumnModel().getColumn(0).setMaxWidth(0);
+            tablaPacientes.getColumnModel().getColumn(0).setMinWidth(0);
+            tablaPacientes.getColumnModel().getColumn(0).setPreferredWidth(0);
+            tablaPacientes.getColumnModel().getColumn(0).setResizable(false);
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, e.toString() + "error2");
         }
     }
     
+    //CARGA DE DATOS A TABLA PACIENTES
     private void cargarDatos(){
         Object o[] = null;
         int posicion = 0;
@@ -228,7 +229,6 @@ public class ClientePacientes extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
-        // TODO add your handling code here:
         CrearPacientes crearPaciente = new CrearPacientes();
         crearPaciente.setVisible(true);
         this.dispose();
@@ -240,7 +240,8 @@ public class ClientePacientes extends javax.swing.JFrame {
         crearTutor.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jMenuItem2ActionPerformed
-
+    //BOTON BUSCAR: BUSCA SIMILITUDES DE LO ESCRITO EN EL TEXTFIELD Y COLOCA 
+    //EN LA TABLA TODOS LOS RESULTADOS
     private void jToggleButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton1ActionPerformed
         // TODO add your handling code here:
         llenarTabla();

@@ -1,11 +1,7 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package ModuloPacientes;
 
 
+import static Bitacora.AgregarBitacora.crearTransaccion;
 import Controladores.TelefonoJpaController;
 import Controladores.TutorpacienteJpaController;
 import Entidades.Telefono;
@@ -32,6 +28,8 @@ public class CrearTutor extends javax.swing.JFrame {
         llenarTabla();
         cargarDatos();
     }
+    
+    //DECLARACION DE VARIABLES GLOBALES
     TutorpacienteJpaController controladorTutor = new TutorpacienteJpaController(EntityM.getEmf());
     TelefonoJpaController controladorTelefono = new TelefonoJpaController(EntityM.getEmf());
     DefaultTableModel rellenarTabla;
@@ -39,7 +37,7 @@ public class CrearTutor extends javax.swing.JFrame {
     Telefono telefonoEditar;
     private EntityManager em = EntityM.getEm();
     
-    
+    //METODO PARA CARGAR TODOS LOS DATOS DE TABLA TUTORES
     private void llenarTabla() {
         try {
             rellenarTabla = (new DefaultTableModel(
@@ -68,10 +66,15 @@ public class CrearTutor extends javax.swing.JFrame {
                 }
             });
             tablaTutor.setModel(rellenarTabla);
+            tablaTutor.getColumnModel().getColumn(0).setMaxWidth(0);
+            tablaTutor.getColumnModel().getColumn(0).setMinWidth(0);
+            tablaTutor.getColumnModel().getColumn(0).setPreferredWidth(0);
+            tablaTutor.getColumnModel().getColumn(0).setResizable(false);
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, e.toString() + "error2");
         }
     }
+    //METODO PARA CARGAR DATOS DE BUSQUEDA PERSONALIZADA
     private void cargarDatos(){
         Object o[] = null;
         int posicion = 0;
@@ -270,7 +273,9 @@ public class CrearTutor extends javax.swing.JFrame {
     private void txtBusquedaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBusquedaActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtBusquedaActionPerformed
-
+    
+    public String nombre,direccion,telefono;
+    //AL PRESIONAR UN TUTOR DE LA TABLA PODRA SER MODIFICADO
     private void tablaTutorMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaTutorMousePressed
         // TODO add your handling code here:
         if(evt.getClickCount() > 1){
@@ -281,9 +286,11 @@ public class CrearTutor extends javax.swing.JFrame {
                     //telefonoEditar = new Telefono(tutorEditar.getId());
                     System.out.println(Integer.parseInt(tablaTutor.getValueAt(fila, 0).toString()));
                     txtNombre.setText(tablaTutor.getValueAt(fila, 1).toString());
+                    nombre = txtNombre.getText();
                     txtDireccion.setText(tablaTutor.getValueAt(fila, 2).toString());
+                    direccion = txtDireccion.getText();
                     txtTelefono.setText(tablaTutor.getValueAt(fila, 3).toString());
-
+                    telefono = txtTelefono.getText();
 
                 } catch (Exception e) {
                     JOptionPane.showMessageDialog(null, e.getMessage());
@@ -293,11 +300,12 @@ public class CrearTutor extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_tablaTutorMousePressed
-
+    //BOTON PARA CREAR UN NUEVO TUTOR
     private void btnCrearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearActionPerformed
         // TODO add your handling code here:
         if(txtNombre.getText().equals("") || txtDireccion.getText().equals("") || txtTelefono.getText().equals("") ){
             JOptionPane.showMessageDialog(null,"Error: Uno de los campos se encuentran vacíos.");
+            crearTransaccion("Error creación de un nuevo tutor, uno o más campos se encontraban vacíos",2);
         }else{
             try{
                 Tutorpaciente tutor = new Tutorpaciente ();
@@ -320,6 +328,7 @@ public class CrearTutor extends javax.swing.JFrame {
                 llenarTabla();
                 cargarDatos();
                 JOptionPane.showMessageDialog(null,"Se ha creado un nuevo registro.");
+                crearTransaccion("Escritura tabla tutor,"+txtNombre.getText()+","+txtDireccion.getText()+","+txtTelefono.getText(), 1);
             }catch(Exception e){ JOptionPane.showMessageDialog(null, e.getMessage());}
             //-------------------------
 
@@ -328,7 +337,7 @@ public class CrearTutor extends javax.swing.JFrame {
             this.txtTelefono.setText("");
         }
     }//GEN-LAST:event_btnCrearActionPerformed
-
+    //BOTON QUE REALIZA LA BUSQUEDA PERSONALIZADA
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:
         llenarTabla();
@@ -346,12 +355,13 @@ public class CrearTutor extends javax.swing.JFrame {
             posicion++;
         }    
     }//GEN-LAST:event_jButton3ActionPerformed
-
+    //BOTON PARA MODIFICAR UN TUTOR
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
         controladorTutor.actualizarTutor(txtNombre.getText(), txtDireccion.getText(), txtTelefono.getText(), tutorEditar.getId());
         llenarTabla();
         cargarDatos();
+        crearTransaccion("Modificación tabla tutor, Nombre antiguo: "+nombre+" Nombre nuevo:"+txtNombre.getText()+",direccion antigua: "+direccion+" direccion nueva: "+txtDireccion.getText()+", telefono antiguo: "+telefono+"telefono nuevo: "+txtTelefono.getText(), 1);
         JOptionPane.showMessageDialog(null,"Se ha actulizado un registro exitosamente.");
 
         this.txtDireccion.setText("");
