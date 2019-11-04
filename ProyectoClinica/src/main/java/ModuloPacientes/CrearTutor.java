@@ -65,6 +65,10 @@ public class CrearTutor extends javax.swing.JFrame {
                 }
             });
             tablaTutor.setModel(rellenarTabla);
+            tablaTutor.getColumnModel().getColumn(0).setMaxWidth(0);
+            tablaTutor.getColumnModel().getColumn(0).setMinWidth(0);
+            tablaTutor.getColumnModel().getColumn(0).setPreferredWidth(0);
+            tablaTutor.getColumnModel().getColumn(0).setResizable(false);
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, e.toString() + "error2");
         }
