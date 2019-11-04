@@ -494,8 +494,7 @@ public class CrearPacientes extends javax.swing.JFrame {
     }//GEN-LAST:event_btnBuscarPacienteActionPerformed
     //BOTON QUE REALIZA LA MODIFICACION DE UN REGISTRO
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
-        controladorPaciente.actualizarPaciente(txtNombre.getText(), txtEdad.getText(), txtDireccion.getText(), txtNit.getText(), txtTelefono.getText(), pacienteEditar.getId());
+        controladorPaciente.actualizarPaciente(txtNombre.getText(), txtEdad.getText(), txtDireccion.getText(), txtNit.getText(), txtTelefono.getText(), idTutor, pacienteEditar.getId());
         llenarTablaPacientes();
         cargarDatos();
         crearTransaccion("Modificación tabla pacientes, Nombre antiguo: "+nombre+" Nombre nuevo:"+txtNombre.getText()+",Edad antigua: "+edad+" edad nueva: "+txtEdad.getText()+", direccion antigua: "+direccion+" direccion nueva: "+txtDireccion.getText()+", telefono antiguo: "+telefono+"telefono nuevo: "+txtTelefono.getText()+",tutor antiguo:"+tutor+" tutor nuevo:"+txtTutor.getText(), 1);

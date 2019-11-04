@@ -81,3 +81,9 @@
 <T27,START TRANSACTION>
 <T27, Modificación tabla pacientes, Nombre antiguo: Pab Nombre nuevo:Pab,Edad antigua: 21 edad nueva: 21, direccion antigua: Su casita direccion nueva: Su casita, telefono antiguo: 777telefono nuevo: 777,tutor antiguo:Oscar tutor nuevo:Oscar>
 <T27,Commit>
+<T28,START TRANSACTION>
+<T28, Escritura tabla tutor,Andrés,Quetzaltenango,78965412>
+<T28,Commit>
+<T29,START TRANSACTION>
+<T29, Modificación tabla pacientes, Nombre antiguo: Andres Nombre nuevo:Andres,Edad antigua: 20 edad nueva: 20, direccion antigua: Quetzaltenango direccion nueva: Quetzaltenango, telefono antiguo: 45789565telefono nuevo: 45789565,tutor antiguo:Andrés tutor nuevo:Andrés>
+<T29,Commit>
