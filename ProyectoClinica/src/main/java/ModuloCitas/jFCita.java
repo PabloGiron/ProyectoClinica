@@ -1,5 +1,6 @@
 package ModuloCitas;
 
+import static Bitacora.AgregarBitacora.crearTransaccion;
 import Controladores.CitanormalJpaController;
 import Controladores.CitaortodonciaJpaController;
 import Entidades.Citanormal;
@@ -34,7 +35,7 @@ public class jFCita extends javax.swing.JFrame {
         initComponents();
         this.setLocationRelativeTo(null);
         setModeloTabla();
-        cargarPacientes("n");
+        cargarPacientes("");
     }
     //METODO PARA CREAR LA CITA
     private void crearCita(){
@@ -46,9 +47,11 @@ public class jFCita extends javax.swing.JFrame {
             CitaortodonciaJpaController cCita = new CitaortodonciaJpaController(EntityM.getEmf());
             if(jTFNombre.getText().equals("") || jTFPrecio.getText().equals("") ){
             JOptionPane.showMessageDialog(null,"Error: Uno de los campos se encuentran vacíos.");
+            crearTransaccion("Error al crear una cita, uno o más campos se encuentran vacíos",2);
             }
             else if(Integer.parseInt(jTFPrecio.getText()) < 1){
                 JOptionPane.showMessageDialog(null,"Error: El precio debe ser mayor a 0.");
+                crearTransaccion("Error al crear una cita, el precio debe ser mayor a 0",2);
             }
             else{
                 short pagado;
@@ -64,7 +67,7 @@ public class jFCita extends javax.swing.JFrame {
                 cita.setPagado(pagado);
                 cita.setHistorialPacienteidHistorialPaciente(historial);
                 cCita.create(cita);
-                
+                crearTransaccion("Escritura en citaOrtodoncia", 1);
             }
         //CREAR CITA NORMAL
         }else if(String.valueOf(jCBCita.getSelectedItem()).equals("Cita Normal")){
