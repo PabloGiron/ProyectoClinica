@@ -434,7 +434,7 @@ public class CrearPacientes extends javax.swing.JFrame {
     //BOTON PARA LA CREACION DE UN PACIENTE
     private void btnCrearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearActionPerformed
         // TODO add your handling code here:
-        if(txtNombre.getText().equals("") || txtDireccion.getText().equals("") || txtTelefono.getText().equals("") ){
+        if(txtNombre.getText().equals("") || txtDireccion.getText().equals("") || txtTelefono.getText().equals("")||txtNit.getText().equals("") ||txtEdad.getText().equals("")){
             JOptionPane.showMessageDialog(null,"Error: Uno de los campos se encuentran vacíos.");
             crearTransaccion("Error creación de un nuevo paciente, uno o más campos se encontraban vacíos",2);
         }else{
@@ -459,7 +459,7 @@ public class CrearPacientes extends javax.swing.JFrame {
                 llenarTablaPacientes();
                 cargarDatos();
                 JOptionPane.showMessageDialog(null,"Se ha creado un nuevo registro.");
-                crearTransaccion("Escritura tabla paciente ,"+txtNombre.getText()+","+txtEdad.getText()+","+txtNit.getText()+","+txtDireccion.getText()+","+txtTelefono.getText(), 1);
+                crearTransaccion("Escritura tabla paciente ,"+txtNombre.getText()+","+txtEdad.getText()+","+txtNit.getText()+","+txtDireccion.getText()+","+txtTelefono.getText()+","+txtTutor.getText(), 1);
             }catch(Exception e){ JOptionPane.showMessageDialog(null, e.getMessage());}
             //-------------------------
 
@@ -498,7 +498,7 @@ public class CrearPacientes extends javax.swing.JFrame {
         controladorPaciente.actualizarPaciente(txtNombre.getText(), txtEdad.getText(), txtDireccion.getText(), txtNit.getText(), txtTelefono.getText(), pacienteEditar.getId());
         llenarTablaPacientes();
         cargarDatos();
-        crearTransaccion("Modificación tabla pacientes, Nombre antiguo: "+nombre+" Nombre nuevo:"+txtNombre.getText()+",Edad antigua: "+edad+" edad nueva: "+txtEdad.getText()+", direccion antigua: "+direccion+" direccion nueva: "+txtDireccion.getText()+", telefono antiguo: "+telefono+"telefono nuevo: "+txtTelefono.getText(), 1);
+        crearTransaccion("Modificación tabla pacientes, Nombre antiguo: "+nombre+" Nombre nuevo:"+txtNombre.getText()+",Edad antigua: "+edad+" edad nueva: "+txtEdad.getText()+", direccion antigua: "+direccion+" direccion nueva: "+txtDireccion.getText()+", telefono antiguo: "+telefono+"telefono nuevo: "+txtTelefono.getText()+",tutor antiguo:"+tutor+" tutor nuevo:"+txtTutor.getText(), 1);
         JOptionPane.showMessageDialog(null,"Se ha actulizado un registro exitosamente.");
 
         this.txtDireccion.setText("");
@@ -507,7 +507,7 @@ public class CrearPacientes extends javax.swing.JFrame {
         this.txtNit.setText("");
         this.txtEdad.setText("");
     }//GEN-LAST:event_jButton2ActionPerformed
-    public String nombre,edad,direccion,telefono;
+    public String nombre,edad,direccion,telefono,tutor;
     //CUANDO SE PRESIONES SOBRE UN PACIENTE EN LA TABLA PODRA SER MODIFICADO
     private void tablaPacientesMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaPacientesMousePressed
         // TODO add your handling code here:
@@ -559,6 +559,7 @@ public class CrearPacientes extends javax.swing.JFrame {
             posicion++;
         }
     }//GEN-LAST:event_btnBuscarTutorActionPerformed
+    
     //AL PRESIONAR UN TUTOR DE LA TABLA PODRA SER MODIFICADO
     private void tablaTutor2MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaTutor2MousePressed
         // TODO add your handling code here:
@@ -567,6 +568,7 @@ public class CrearPacientes extends javax.swing.JFrame {
             if(fila >= 0){
                 try {
                     txtTutor.setText(tablaTutor2.getValueAt(fila, 1).toString());
+                    tutor = txtTutor.getText();
                     idTutor = Integer.parseInt(tablaTutor2.getValueAt(fila, 0).toString());
                 } catch (Exception e) {
                     JOptionPane.showMessageDialog(null, e.getMessage());
