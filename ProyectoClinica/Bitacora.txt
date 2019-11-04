@@ -1,0 +1,65 @@
+
+<T2,START TRANSACTION>
+<T2, Escritura tabla producto,asdf,2,2.6,1,0>>
+<T2,Commit>
+<T3,START TRANSACTION>
+<T3,Rollback>
+<T4,START TRANSACTION>
+<T4, Escritura tabla producto,Proh,34,22.5,1,0>
+<T4,Commit>
+<T5,START TRANSACTION>
+<T5, Escritura tabla producto: ERROR uno o más de los campos se encontraba vacío>
+<T5,Rollback>
+<T6,START TRANSACTION>
+<T6, Modificación tabla producto, Nombre viejo: Hilo Nombre nuevo:Producto_1,Cantidad vieja: 25 Cantidad nueva: 60, Precio viejo: 14.5 Precio nuevo: 25.50,3,0>
+<T6,Commit>
+<T7,START TRANSACTION>
+<T7, Eliminación de tabla producto,,,,1,0>
+<T7,Commit>
+<T8,START TRANSACTION>
+<T8, Eliminación de tabla producto,,,,1,0>
+<T8,Commit>
+<T9,START TRANSACTION>
+<T9, Eliminación de tabla producto,,,,1,0>
+<T9,Commit>
+<T10,START TRANSACTION>
+<T10, Eliminación de tabla producto,asdf,3,66.0,1,0>
+<T10,Commit>
+<T11,START TRANSACTION>
+<T11, Eliminación de tabla producto,adf,43,2.0,1,0>
+<T11,Commit>
+<T12,START TRANSACTION>
+<T12, Eliminación de tabla producto,Pro444,65,65.0,1,0>
+<T12,Commit>
+<T13,START TRANSACTION>
+<T13, Escritura de venta, Barrer, Cantidad: 2>
+<T13, Escritura de venta, Trapear, Cantidad: 4>
+<T13, Escritura de venta, Barrer, Cantidad: 1>
+<T13, Escritura de venta, Trapear, Cantidad: 3>
+<T13,Commit>
+<T14,START TRANSACTION>
+<T14, Creacion de venta, Servicio: Barrer, Cantidad: 1>
+<T14, Creacion de venta, Servicio: Barrer, Cantidad: 1>
+<T14,Commit>
+<T15,START TRANSACTION>
+<T15, Creacion de venta, Servicio: Trapear, Cantidad: 1>
+<T15, Creacion de venta, Servicio: Trapear, Cantidad: 2>
+<T15,Commit>
+<T16,START TRANSACTION>
+<T16, Error al crear el servicio, uno o más campos se encuentran vacíos>
+<T16,Rollback>
+<T17,START TRANSACTION>
+<T17, Escritura tabla servicio,Masaje,125>
+<T17,Commit>
+<T18,START TRANSACTION>
+<T18, Escritura tabla paciente ,Pablo Girón,22,12343121,Colonia Minerva,42980770>
+<T18,Commit>
+<T19,START TRANSACTION>
+<T19, Modificación tabla pacientes, Nombre antiguo: Pabllisho Nombre nuevo:Pab,Edad antigua: 25 edad nueva: 21, direccion antigua: Su ksa direccion nueva: Su casita, telefono antiguo: 777telefono nuevo: 777>
+<T19,Commit>
+<T20,START TRANSACTION>
+<T20, Escritura tabla tutor ,Tutor,Direccion,7676>
+<T20,Commit>
+<T21,START TRANSACTION>
+<T21, Modificación tabla tutor, Nombre antiguo: PJL Nombre nuevo:JPG,direccion antigua: No direccion nueva: Si, telefono antiguo: 777telefono nuevo: 666>
+<T21,Commit>
